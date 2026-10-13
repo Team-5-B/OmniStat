@@ -1,0 +1,15 @@
+# Ignore Python virtual environment
+venv/
+
+# Ignore secrets
+.env
+*.env
+!.env.example
+
+# Ignore generated Python files
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ignore Mac system files
+.DS_Store
