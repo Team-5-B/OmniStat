@@ -133,3 +133,40 @@ body {
     font-weight: bold;
     color: #2563eb;
 }
+
+.upload-section {
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.upload-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.upload-box {
+    border: 2px dashed #2563eb;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    background-color: #f8fafc;
+}
+
+.upload-box h3 {
+    margin-bottom: 15px;
+    color: #2563eb;
+}
+
+.upload-box p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.upload-button {
+    display: inline-block;
+    background-color: #2563eb;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
