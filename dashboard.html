@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav>
+    <h2>OmniStat</h2>
+    <a href="dashboard.html">Overview</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="reports.html">Reports</a>
+</nav>
     <main class="dashboard-container">
         <h1>OmniStat Dashboard</h1>
         <p>Welcome to your business dashboard!</p>
@@ -38,5 +44,12 @@
     </div>
 </section>
     </main>
+    <script>
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "signin.html";
+    }
+</script>
 </body>
 </html>
