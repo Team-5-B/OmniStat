@@ -12,6 +12,8 @@
     <a href="dashboard.html">Overview</a>
     <a href="inventory.html">Inventory</a>
     <a href="reports.html">Reports</a>
+        <span id="userName"></span>
+<span id="businessName"></span>
 </nav>
     <main class="dashboard-container">
         <h1>OmniStat Dashboard</h1>
@@ -49,6 +51,25 @@
 
     if (!token) {
         window.location.href = "signin.html";
+    } else {
+        fetch("/api/auth/me", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Unable to load user information");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("userName").textContent = data.name;
+            document.getElementById("businessName").textContent = data.business_name;
+        })
+        .catch(error => {
+            console.error(error);
+        });
     }
 </script>
 </body>
