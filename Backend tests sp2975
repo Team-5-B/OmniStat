@@ -1,0 +1,34 @@
+# OmniStat Backend Test Results
+
+**Git branch:** `integration/team-work`  
+**Test environment:** Local Python virtual environment (`.venv`)  
+**Python:** 3.13.1  
+**pytest:** 9.1.1  
+**Command:** `python -m pytest -v`
+
+## Result
+
+**9 passed, 0 failed, 1 warning, in 3.84 seconds.**
+
+| Test | Result |
+| --- | --- |
+| `tests/test_auth.py::test_register_creates_all_three_rows_and_bcrypt_hash` | PASSED |
+| `tests/test_auth.py::test_duplicate_email_rolls_back_new_business` | PASSED |
+| `tests/test_auth.py::test_login_correct_and_wrong_password` | PASSED |
+| `tests/test_auth.py::test_missing_user_and_bad_input` | PASSED |
+| `tests/test_auth.py::test_tampered_token_rejected` | PASSED |
+| `tests/test_me.py::test_me_returns_user_and_business` | PASSED |
+| `tests/test_me.py::test_me_rejects_missing_token` | PASSED |
+| `tests/test_me.py::test_me_rejects_fake_token` | PASSED |
+| `tests/test_me.py::test_me_rejects_token_for_deleted_user` | PASSED |
+
+## Warning
+
+One `StarletteDeprecationWarning` was reported by FastAPI's test client, concerning `httpx` support in `starlette.testclient`. It did not cause a test failure. Dependency compatibility can be reviewed later.
+
+## Scope and limitations
+
+- The automated tests use mocked database operations. Passing them does **not** verify real account registration or login against PostgreSQL.
+- Separately, the backend's `get_connection()` was verified to connect to the existing local `OmniStat` PostgreSQL database, and the `users`, `businesses`, and `memberships` table definitions were inspected.
+- Real database write tests and full frontend-to-backend browser testing remain outstanding.
+- This document summarizes the observed local test output; it is **not** a CI run or a complete raw terminal log.

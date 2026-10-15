@@ -32,5 +32,42 @@
             <a href="signin.html">Sign in</a>
         </p>
     </main>
+    <script>
+    const signupForm = document.getElementById("signupForm");
+
+    signupForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const businessName = document.getElementById("businessName").value;
+        const ownerName = document.getElementById("ownerName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: ownerName,
+                    business_name: businessName,
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                window.location.href = "signin.html";
+            } else {
+                alert(data.detail || "Unable to create account.");
+            }
+        } catch (error) {
+            alert("Unable to connect to the server.");
+        }
+    });
+</script>
 </body>
 </html>

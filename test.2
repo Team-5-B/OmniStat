@@ -1,0 +1,102 @@
+# OmniStat Backend and PostgreSQL Integration Test Report
+
+**Project:** OmniStat  
+**Git branch:** `integration/team-work`  
+**Execution environment:** Local macOS, Python virtual environment (`.venv`)  
+**Python:** 3.13.1  
+**pytest:** 9.1.1  
+**PostgreSQL CLI:** 14.24 (Homebrew)  
+**Evidence:** Output observed from local VS Code terminal and the FastAPI documentation page. This is a manual test report, **not a GitHub Actions/CI run**.
+
+## 1. Automated authentication tests — PASSED
+
+**Command:** `python -m pytest -v`  
+**Outcome:** **9 passed, 0 failed, 1 warning in 3.84 seconds**.
+
+| Automated test | Result |
+| --- | --- |
+| `tests/test_auth.py::test_register_creates_all_three_rows_and_bcrypt_hash` | PASSED |
+| `tests/test_auth.py::test_duplicate_email_rolls_back_new_business` | PASSED |
+| `tests/test_auth.py::test_login_correct_and_wrong_password` | PASSED |
+| `tests/test_auth.py::test_missing_user_and_bad_input` | PASSED |
+| `tests/test_auth.py::test_tampered_token_rejected` | PASSED |
+| `tests/test_me.py::test_me_returns_user_and_business` | PASSED |
+| `tests/test_me.py::test_me_rejects_missing_token` | PASSED |
+| `tests/test_me.py::test_me_rejects_fake_token` | PASSED |
+| `tests/test_me.py::test_me_rejects_token_for_deleted_user` | PASSED |
+
+**Dependency verification:** `python -m pip check` → `No broken requirements found.`
+
+**Warning:** One `StarletteDeprecationWarning` related to the `httpx` integration in `starlette.testclient`. Tests still passed. Review dependency compatibility separately.
+
+**Limitation:** These nine tests mock database operations. They do not on their own establish that registration and login work with a live PostgreSQL database.
+
+## 2. Live PostgreSQL connectivity and schema — PASSED
+
+| Check | Observed result | Status |
+| --- | --- | --- |
+| PostgreSQL listening on `localhost:5432` | `accepting connections` | PASSED |
+| Existing database inspection | `OmniStat` has 8 tables | PASSED |
+| Python backend connection to existing database | `Connected: ('OmniStat', 'siddarthareddypagilla')` | PASSED |
+| Inspected authentication tables | `users`, `businesses`, and `memberships` have the expected key columns and relationships | PASSED |
+| Separate development database created | Lowercase `omnistat` initially had 0 tables | PASSED |
+| Test database schema initialized | `initialschema.sql` produced 6 tables in `omnistat` | PASSED |
+| Python backend connection to test database | `Connected: ('omnistat', 'siddarthareddypagilla')` | PASSED |
+| Test-user baseline count before registration | `0` users in `omnistat` | PASSED |
+
+**Database distinction:** Uppercase `OmniStat` is the original database. Lowercase `omnistat` is the separate test database. Live write tests should target **only lowercase `omnistat`**.
+
+**Schema safety:** `initialschema.sql` contains `DROP TABLE` statements. It was run against the separate testing database, **twice**; the second run dropped and recreated its six tables. Do not rerun this file against any database containing data that must be preserved.
+
+## 3. Live FastAPI HTTP checks — PASSED
+
+| Check | Evidence | Status |
+| --- | --- | --- |
+| FastAPI server startup | `Application startup complete.` from `python -m uvicorn backend.main:app --reload` | PASSED |
+| Health endpoint | `GET http://127.0.0.1:8000/health` returned `{"status":"ok"}` | PASSED |
+| API documentation | `/docs` displayed `/health`, `/api/auth/register`, `/api/auth/login`, and `/api/auth/me` | PASSED |
+| Real registration request | `POST /api/auth/register` returned **HTTP/1.1 201 Created** with `token_type: "bearer"`, a user ID, and a business ID | PASSED (API response) |
+
+### Registration test details
+
+- **Target:** Local FastAPI server configured with `DB_NAME=omnistat`.
+- **Test name:** `OmniStat Tester`.
+- **Test business:** `OmniStat Demo Restaurant`.
+- **Test email:** `omnistat.test.20261013@example.com`.
+- **Request fields:** `name`, `business_name`, `email`, `password`.
+- **Response observed:** `HTTP/1.1 201 Created` (server response date: 2026-10-14 01:14:20 GMT); returned an access token and generated IDs.
+- **Security:** The password and full access token are intentionally omitted from this report. Never commit tokens, passwords, or JWT signing keys to the repository.
+
+**Interpretation:** Real registration via the HTTP API returned a success response. The resulting database records have **not yet been independently verified by a SQL query**. A successful response is not a substitute for checking the persisted rows.
+
+**Expected behavior, not a bug:** `GET /` and `GET /favicon.ico` returned `404 Not Found` because these routes/resources are not configured in the backend at this stage.
+
+## 4. Remaining validation — NOT YET COMPLETED
+
+| Remaining task | Status |
+| --- | --- |
+| Confirm registered user, business, and membership rows were saved in lowercase `omnistat` | PENDING |
+| Inspect the stored password hash without exposing the complete hash | PENDING |
+| Test actual `POST /api/auth/login` against PostgreSQL | PENDING |
+| Test authenticated `GET /api/auth/me` against PostgreSQL | PENDING |
+| Verify signup and signin from the actual browser frontend | PENDING |
+| Resolve frontend-to-backend hosting/routing differences if needed | PENDING |
+| Re-run the test suite after integration changes | PENDING |
+| Review changes and merge `integration/team-work` into `main` | NOT STARTED |
+
+### Recommended next read-only verification
+
+Run **against the test database only**, with the FastAPI server still running:
+
+```bash
+psql -d omnistat -c "
+SELECT u.name AS user_name, u.email, b.name AS business_name, m.role,
+       LEFT(u.password_hash, 4) AS hash_prefix
+FROM users AS u
+JOIN memberships AS m ON m.user_id = u.id
+JOIN businesses AS b ON b.id = m.business_id
+WHERE u.email = 'omnistat.test.20261013@example.com';
+"
+```
+
+This report reflects **observed results to date**. Do not mark pending checks as passed until their results have been captured.
