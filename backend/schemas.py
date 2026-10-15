@@ -44,3 +44,14 @@ class AuthResponse(BaseModel):
     token_type: str = "bearer"
     user_id: str
     business_id: str
+
+
+
+"""Nicholas - Task 2.3: who is logged in, for the navbar"""
+class MeResponse(BaseModel):
+    user_id: str
+    name: str
+    email: str
+    business_id: str
+    business_name: str
+    role: str

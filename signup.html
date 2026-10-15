@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniStat - Create Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="signup-container">
+        <h2>OmniStat</h2>
+        <h1>Create an account</h1>
+        <p>Get started with OmniStat today.</p>
+
+        <form id="signupForm">
+            <label for="businessName">Business Name</label>
+            <input type="text" id="businessName" required>
+
+            <label for="ownerName">Owner Name</label>
+            <input type="text" id="ownerName" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required minlength="8">
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <p>Already have an account?
+            <a href="signin.html">Sign in</a>
+        </p>
+    </main>
+    <script>
+    const signupForm = document.getElementById("signupForm");
+
+    signupForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const businessName = document.getElementById("businessName").value;
+        const ownerName = document.getElementById("ownerName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: ownerName,
+                    business_name: businessName,
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                window.location.href = "signin.html";
+            } else {
+                alert(data.detail || "Unable to create account.");
+            }
+        } catch (error) {
+            alert("Unable to connect to the server.");
+        }
+    });
+</script>
+</body>
+</html>

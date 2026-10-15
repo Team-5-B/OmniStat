@@ -1,12 +1,27 @@
 """Tasks 1.8, 1.11, 1.12: OmniStat FastAPI server and authentication routes."""
+
 import psycopg
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.staticfiles import StaticFiles
 
 from backend.database import get_connection
-from backend.schemas import AuthResponse, LoginRequest, RegisterRequest
-from backend.security import create_access_token, hash_password, verify_password, jwt_secret
+from backend.schemas import (
+    AuthResponse,
+    LoginRequest,
+    RegisterRequest,
+    MeResponse,
+)
+from backend.security import (
+    create_access_token,
+    hash_password,
+    verify_password,
+    jwt_secret,
+    get_current_user_claims,
+)
 
 app = FastAPI(title="OmniStat Authentication API")
+
+
 
 
 @app.get("/health")
@@ -82,3 +97,36 @@ def login(data: LoginRequest):
         user_id=str(user_id),
         business_id=str(business_id),
     )
+
+
+"""Nicholas - Task 2.3: return logged in user and their business"""
+@app.get("/api/auth/me", response_model=MeResponse)
+def me(claims: dict = Depends(get_current_user_claims)):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """ SELECT u.name, u.email, b.id, b.name, m.role
+                FROM users AS u
+                JOIN memberships AS m ON m.user_id = u.id
+                JOIN businesses AS b ON b.id = m.business_id
+                WHERE u.id = %s AND b.id = %s""",
+                (claims["sub"], claims["business_id"]),
+            )
+            row = cur.fetchone()
+
+    # Valid token, but no matching user or membership
+    if row is None:
+        raise HTTPException(status_code=401, detail="Account no longer exists")
+
+    user_name, email, business_id, business_name, role = row
+    return MeResponse(
+        user_id=claims["sub"],
+        name=user_name,
+        email=email,
+        business_id=str(business_id),
+        business_name=business_name,
+        role=role
+    )
+# Nicholas - serve the frontend pages from the same server as the API, so the forms' fetch("/api/...")
+# calls reach the backend. MUST stay at the BOTTOM so the /api routes above take priority.
+app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
