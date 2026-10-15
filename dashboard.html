@@ -6,15 +6,23 @@
     <title>OmniStat Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <nav>
-    <h2>OmniStat</h2>
-    <a href="dashboard.html">Overview</a>
-    <a href="inventory.html">Inventory</a>
-    <a href="reports.html">Reports</a>
-        <span id="userName"></span>
-<span id="businessName"></span>
-</nav>
+<body class="app-page">
+    <nav class="top-nav">
+        <a href="dashboard.html" class="nav-brand">OmniStat</a>
+        <div class="nav-links">
+            <a href="dashboard.html" class="active">Overview</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="reports.html">Reports</a>
+        </div>
+        <div class="nav-user">
+            <div class="nav-user-text">
+                <span id="userName"></span>
+                <span id="businessName"></span>
+            </div>
+            <button id="logoutButton" type="button">Log Out</button>
+        </div>
+    </nav>
+    <main class="dashboard-container">
     <main class="dashboard-container">
         <h1>OmniStat Dashboard</h1>
         <p>Welcome to your business dashboard!</p>
@@ -33,6 +41,14 @@
             <div class="card">
                 <h2>Inventory Items</h2>
                 <p>0</p>
+            </div>
+        </section>
+        <!-- Nicholas - Task 2.7: revenue chart -->
+        <section class="chart-section">
+            <h2>Revenue, Last 30 Days</h2>
+            <p class="sample-label">Sample data</p>
+            <div class="chart-box">
+                <canvas id="revenue-chart"></canvas>
             </div>
         </section>
         <section class="upload-section">
@@ -72,5 +88,11 @@
         });
     }
 </script>
+<!-- Nicholas - Task 2.6: logout button -->
+<script src="logout.js"></script>
+
+<!-- Nicholas - Tasks 2.7 and 2.8: chart library + chart and KPI card code -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<script src="dashboard.js"></script>
 </body>
 </html>
