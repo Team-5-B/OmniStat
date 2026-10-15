@@ -195,3 +195,141 @@ body {
     position: relative;
     height: 320px;
 }
+/* Nicholas - Task 2.10: navbar layout */
+/* Pages with the navbar stack top to bottom instead of centering
+   like the sign in and sign up pages do. */
+body.app-page {
+    display: block;
+}
+
+.top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 32px;
+    background-color: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.nav-brand {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 6px;
+}
+
+.nav-links a {
+    padding: 8px 16px;
+    border-radius: 6px;
+    color: #555;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-links a:hover {
+    background-color: #eff4ff;
+    color: #2563eb;
+}
+
+.nav-links a.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.nav-user-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.3;
+}
+
+#userName {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#businessName {
+    font-size: 12px;
+    color: #888;
+}
+
+#logoutButton {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#logoutButton:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+/* for phones stack the brand and user on top, links underneath */
+@media (max-width: 700px) {
+    .top-nav {
+        flex-wrap: wrap;
+        padding: 12px 16px;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .dashboard-container {
+        margin: 20px auto;
+        padding: 16px;
+    }
+}
+
+/* Nicholas - Task 2.11: placeholder page layout */
+.placeholder-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+}
+
+.coming-soon-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #eff4ff;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.placeholder-card h2 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.placeholder-card ul {
+    padding-left: 20px;
+    color: #555;
+    line-height: 1.8;
+}
