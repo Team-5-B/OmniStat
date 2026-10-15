@@ -6,7 +6,7 @@
 **pytest:** 9.1.1  
 **Command:** `python -m pytest -v`
 
-##we ran all nine automated backend tests in a Python virtual environment, successfully verified registration, login, 
+## we ran all nine automated backend tests in a Python virtual environment, successfully verified registration, login, 
 password security, and authentication functionality with zero failures, and confirmed the backend could connect to PostgreSQL.
 ## Result
 
