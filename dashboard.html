@@ -12,6 +12,10 @@
     <a href="dashboard.html">Overview</a>
     <a href="inventory.html">Inventory</a>
     <a href="reports.html">Reports</a>
+        <span id="userName"></span>
+    <span id="businessName"></span>
+    <!-- Nicholas - Task 2.6: logout button -->
+    <button id="logoutButton" type="button">Log Out</button>
 </nav>
     <main class="dashboard-container">
         <h1>OmniStat Dashboard</h1>
@@ -33,6 +37,14 @@
                 <p>0</p>
             </div>
         </section>
+        <!-- Nicholas - Task 2.7: revenue chart -->
+        <section class="chart-section">
+            <h2>Revenue, Last 30 Days</h2>
+            <p class="sample-label">Sample data</p>
+            <div class="chart-box">
+                <canvas id="revenue-chart"></canvas>
+            </div>
+        </section>
         <section class="upload-section">
     <h2>Upload Sales Data</h2>
     <div class="upload-box">
@@ -49,7 +61,31 @@
 
     if (!token) {
         window.location.href = "signin.html";
+    } else {
+        fetch("/api/auth/me", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Unable to load user information");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("userName").textContent = data.name;
+            document.getElementById("businessName").textContent = data.business_name;
+        })
+        .catch(error => {
+            console.error(error);
+        });
     }
 </script>
+    <!-- Nicholas - Task 2.6: logout button -->
+    <script src="logout.js"></script>
+    <!-- Nicholas - Tasks 2.7 and 2.8: chart library + chart and KPI card code -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>
