@@ -1,6 +1,7 @@
 """Tasks 1.8, 1.11, 1.12: OmniStat FastAPI server and authentication routes."""
 import psycopg
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 
 from backend.database import get_connection
 from backend.schemas import AuthResponse, LoginRequest, RegisterRequest
@@ -114,3 +115,6 @@ def me(claims: dict = Depends(get_current_user_claims)):
         business_name=business_name,
         role=role
     )
+# Nicholas - serve the frontend pages from the same server as the API, so the forms' fetch("/api/...") 
+# calls reach the backend. MUST stay at the BOTTOM so the /api routes above take priority.
+app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
