@@ -1,3 +1,8 @@
+-- WARNING: DESTRUCTIVE DEVELOPMENT RESET SCRIPT!
+-- Running this file DROPS tables and can erase accounts, sales, and business data.
+-- Never run on a populated/production database; back up data first.
+-- For Sprint 2 updates run migrations/003_siddartha_sprint2.sql instead.
+
 DROP TABLE IF EXISTS memberships CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS raw_csv_uploads CASCADE;

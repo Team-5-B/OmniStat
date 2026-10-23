@@ -117,4 +117,10 @@ def me(claims: dict = Depends(get_current_user_claims)):
     )
 # Nicholas - serve the frontend pages from the same server as the API, so the forms' fetch("/api/...") 
 # calls reach the backend. MUST stay at the BOTTOM so the /api routes above take priority.
-app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
+# Siddartha Sprint 2 endpoints: registered before the catch-all frontend mount.
+from backend.siddartha_sprint2 import (
+    router as siddartha_sprint2_router, FrontendOnlyStaticFiles
+)
+app.include_router(siddartha_sprint2_router)
+
+app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")
