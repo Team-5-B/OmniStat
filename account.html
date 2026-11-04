@@ -41,6 +41,15 @@
                 <p>Name: <span id="accountName"></span></p>
                 <p>Email: <span id="accountEmail"></span></p>
                 <p>Business: <span id="accountBusiness"></span></p>
+                <div id="editBusinessSection" style="margin-top: 15px;" hidden>
+    <label for="businessNameInput">Edit Business Name:</label>
+    <input type="text" id="businessNameInput"
+           placeholder="Enter business name">
+    <button type="button" id="saveBusinessButton">
+        Save Changes
+    </button>
+    <p id="businessMessage"></p>
+</div>
                 <p>Role: <span id="accountRole"></span></p>
             </div>
         </section>
@@ -81,7 +90,8 @@
 
                 document.getElementById("message").hidden = true;
                 document.getElementById("accountInfo").hidden = false;
-                
+                document.getElementById("editBusinessSection").hidden =
+    data.role !== "owner";
 if (data.role === "owner") {
     fetch("/api/business/team", {
         headers: {
@@ -130,6 +140,46 @@ if (data.role === "owner") {
             });
         }
     </script>
+
+<script>
+    const saveBusinessButton = document.getElementById("saveBusinessButton");
+
+    saveBusinessButton.addEventListener("click", function () {
+        const businessName = document.getElementById("businessNameInput").value.trim();
+        const businessMessage = document.getElementById("businessMessage");
+
+        if (businessName === "") {
+            businessMessage.textContent = "Please enter a business name.";
+            return;
+        }
+
+        businessMessage.textContent = "Saving...";
+
+        fetch("/api/business", {
+            method: "PATCH",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: businessName })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Could not update business name");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("accountBusiness").textContent = data.name;
+            document.getElementById("businessName").textContent = data.name;
+            businessMessage.textContent = "Business name updated!";
+        })
+        .catch(error => {
+            businessMessage.textContent = "Unable to update business name.";
+            console.error(error);
+        });
+    });
+</script>
 
     <script src="logout.js"></script>
 </body>
