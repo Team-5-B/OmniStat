@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniStat Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+
+    <nav class="top-nav">
+        <a href="dashboard.html" class="nav-brand">OmniStat</a>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Overview</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="reports.html">Reports</a>
+            <a href="account.html" class="active">Account</a>
+        </div>
+
+        <div class="nav-user">
+            <div class="nav-user-text">
+                <span id="userName"></span>
+                <span id="businessName"></span>
+            </div>
+            <button id="logoutButton" type="button">Log Out</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <h1>My Account</h1>
+        <p>View your account and business details.</p>
+
+        <section class="card">
+            <h2>Account Information</h2>
+
+            <p id="message">Loading account information...</p>
+
+            <div id="accountInfo" hidden>
+                <p>Name: <span id="accountName"></span></p>
+                <p>Email: <span id="accountEmail"></span></p>
+                <p>Business: <span id="accountBusiness"></span></p>
+                <p>Role: <span id="accountRole"></span></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "signin.html";
+        } else {
+            fetch("/api/auth/me", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Could not load account");
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("userName").textContent = data.name;
+                document.getElementById("businessName").textContent = data.business_name;
+
+                document.getElementById("accountName").textContent = data.name;
+                document.getElementById("accountEmail").textContent = data.email;
+                document.getElementById("accountBusiness").textContent = data.business_name;
+                document.getElementById("accountRole").textContent = data.role;
+
+                document.getElementById("message").hidden = true;
+                document.getElementById("accountInfo").hidden = false;
+            })
+            .catch(error => {
+                document.getElementById("message").textContent =
+                    "Unable to load account information.";
+                console.error(error);
+            });
+        }
+    </script>
+
+    <script src="logout.js"></script>
+</body>
+</html>
