@@ -59,7 +59,18 @@
             <p id="teamMessage">Team information will appear here.</p>
             <div id="teamList"></div>
         </section>
+<section class="card" id="inviteSection"
+         style="margin-top: 25px;" hidden>
+    <h2>Invite Employee</h2>
+    <p>Create an invitation link for a new employee.</p>
 
+    <button type="button" id="inviteButton">
+        Generate Invite Link
+    </button>
+
+    <p id="inviteMessage"></p>
+    <p id="inviteLink"></p>
+</section>
     </main>
 
     <script>
@@ -91,6 +102,8 @@
                 document.getElementById("message").hidden = true;
                 document.getElementById("accountInfo").hidden = false;
                 document.getElementById("editBusinessSection").hidden =
+    data.role !== "owner";
+                document.getElementById("inviteSection").hidden =
     data.role !== "owner";
 if (data.role === "owner") {
     fetch("/api/business/team", {
@@ -180,7 +193,44 @@ if (data.role === "owner") {
         });
     });
 </script>
+<script>
+    const inviteButton = document.getElementById("inviteButton");
 
+    inviteButton.addEventListener("click", function () {
+        const inviteMessage = document.getElementById("inviteMessage");
+        const inviteLink = document.getElementById("inviteLink");
+
+        inviteMessage.textContent = "Generating invite link...";
+        inviteLink.textContent = "";
+
+        fetch("/api/invites", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                role: "employee",
+                expires_in_days: 7
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Could not create invite");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const link = new URL(data.invite_url, window.location.href).href;
+            inviteMessage.textContent = "Invite link created!";
+            inviteLink.textContent = link;
+        })
+        .catch(error => {
+            inviteMessage.textContent = "Unable to create invite link.";
+            console.error(error);
+        });
+    });
+</script>
     <script src="logout.js"></script>
 </body>
 </html>
