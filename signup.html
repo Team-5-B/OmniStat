@@ -11,7 +11,7 @@
         <h2>OmniStat</h2>
         <h1>Create an account</h1>
         <p>Get started with OmniStat today.</p>
-
+<p id="inviteMessage" hidden></p>
         <form id="signupForm">
             <label for="businessName">Business Name</label>
             <input type="text" id="businessName" required>
@@ -34,7 +34,14 @@
     </main>
     <script>
     const signupForm = document.getElementById("signupForm");
+const urlParams = new URLSearchParams(window.location.search);
+const inviteCode = urlParams.get("invite");
 
+if (inviteCode) {
+    document.getElementById("inviteMessage").hidden = false;
+    document.getElementById("inviteMessage").textContent =
+        "You are signing up with an employee invitation.";
+}
     signupForm.addEventListener("submit", async function(event) {
         event.preventDefault();
 
