@@ -44,6 +44,13 @@
                 <p>Role: <span id="accountRole"></span></p>
             </div>
         </section>
+        
+        <section class="card" style="margin-top: 25px;">
+            <h2>Team Members</h2>
+            <p id="teamMessage">Team information will appear here.</p>
+            <div id="teamList"></div>
+        </section>
+
     </main>
 
     <script>
@@ -74,6 +81,47 @@
 
                 document.getElementById("message").hidden = true;
                 document.getElementById("accountInfo").hidden = false;
+                
+if (data.role === "owner") {
+    fetch("/api/business/team", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Could not load team");
+        }
+        return response.json();
+    })
+    .then(teamData => {
+        const teamList = document.getElementById("teamList");
+        const teamMessage = document.getElementById("teamMessage");
+
+        teamList.innerHTML = "";
+
+        teamData.members.forEach(member => {
+            const p = document.createElement("p");
+            p.textContent = member.name + " - " +
+                member.email + " (" + member.role + ")";
+            teamList.appendChild(p);
+        });
+
+        teamMessage.textContent = teamData.members.length === 0
+            ? "No team members found."
+            : "";
+    })
+    .catch(error => {
+        document.getElementById("teamMessage").textContent =
+            "Unable to load team members.";
+        console.error(error);
+    });
+} else {
+    document.getElementById("teamMessage").textContent =
+        "Team management is only available to business owners.";
+}
+
+                
             })
             .catch(error => {
                 document.getElementById("message").textContent =
