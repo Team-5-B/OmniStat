@@ -1,33 +1,5 @@
-// Nicholas - Tasks 2.7 and 2.8: revenue chart and KPI cards with SAMPLE data.
-// When the CSV parser is done (sprint 2), replace makeSampleData() with real numbers from the backend. Everything below it stays the same.
-
-// Sample data -
-// Makes 30 days of fake sales. Same numbers every refresh (no Math.random), with busier weekends so it looks like a real store.
-
-// TODO (sprint 2): replace with real daily sales from the backend once the CSV parser is done.
-function makeSampleData() {
-    const days = [];
-    const today = new Date();
-
-    for (let i = 29; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
-
-        const weekday = date.getDay(); // 0 = Sunday, 6 = Saturday
-        const isWeekend = weekday === 0 || weekday === 6;
-        const wiggle = Math.sin(i * 1.7) * 220; // fake day to day variation
-
-        const revenue = Math.round(1800 + (isWeekend ? 650 : 0) + wiggle);
-        const transactions = Math.round(revenue / 24 + Math.cos(i) * 6);
-
-        days.push({ date, revenue, transactions });
-    }
-    return days;
-}
-
-// Fake number of products in stock, until the inventory page exists.
-// TODO (sprint 2): replace with the real item count once the inventory page exists.
-const SAMPLE_INVENTORY_ITEMS = 148;
+// Nicholas - Tasks 2.7 and 2.8: revenue chart and KPI cards.
+// Nicholas - Task 3.11: real numbers now come from GET /api/dashboard/summary (Siddartha's 3.6) instead of sample data.
 
 // Formatting helpers 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
@@ -47,13 +19,12 @@ function setCard(title, value) {
     }
 }
 
-function renderKpis(days) {
-    const totalSales = days.reduce((sum, day) => sum + day.revenue, 0);
-    const totalOrders = days.reduce((sum, day) => sum + day.transactions, 0);
-
-    setCard("Total Sales", money.format(totalSales));
-    setCard("Total Orders", count.format(totalOrders));
-    setCard("Inventory Items", count.format(SAMPLE_INVENTORY_ITEMS));
+// Task 3.11: KPI cards from the summary endpoint
+function renderKpis(kpis) {
+    setCard("Total Sales", money.format(kpis.total_revenue));
+    setCard("Items Sold", count.format(kpis.items_sold_count));
+    // no inventory data until sprint 3, so show a dash instead of a fake number.
+    setCard("Inventory Items", "—");
 }
 
 // Task 2.7: revenue chart 
@@ -96,7 +67,53 @@ function renderRevenueChart(days) {
     });
 }
 
-// Run it 
-const days = makeSampleData();
-renderKpis(days);
-renderRevenueChart(days);
+// Task 3.11: message shown in the chart area when there's nothing to chart
+function showChartMessage(text) {
+    document.querySelector(".chart-box").hidden = true;
+    const message = document.getElementById("chart-message");
+    message.textContent = text;
+    message.hidden = false;
+}
+
+// Task 3.11: load the summary and fill in the dashboard
+async function loadDashboard() {
+    const token = localStorage.getItem("token");
+    if (!token) return; // the check in dashboard.html already sends them to sign in
+
+    try {
+        const response = await fetch("/api/dashboard/summary", {
+            headers: { "Authorization": "Bearer " + token },
+        });
+
+        // expired or bad token: same as being logged out.
+        if (response.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "signin.html";
+            return;
+        }
+        if (!response.ok) {
+            throw new Error("Summary request failed: " + response.status);
+        }
+
+        const summary = await response.json();
+        renderKpis(summary.kpis);
+
+        // empty state: a new business with no uploads yet.
+        if (!summary.has_data) {
+            showChartMessage("No sales data yet. Upload your first POS report below to see your revenue here.");
+            return;
+        }
+
+        // "2026-11-03" read as local time, so the label doesn't shift back a day in US time zones.
+        const days = summary.revenue_30_days.map((day) => ({
+            date: new Date(day.date + "T00:00:00"),
+            revenue: day.revenue,
+        }));
+        renderRevenueChart(days);
+    } catch (error) {
+        console.error(error);
+        showChartMessage("Couldn't load your sales data. Try refreshing the page.");
+    }
+}
+
+loadDashboard();

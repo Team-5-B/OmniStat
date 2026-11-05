@@ -9,6 +9,7 @@ from backend.security import create_access_token, hash_password, verify_password
 from fastapi import Depends
 from backend.schemas import MeResponse
 from backend.security import get_current_user_claims
+from backend.schemas import AccountResponse, AccountUpdate, PasswordChange
 
 app = FastAPI(title="OmniStat Authentication API")
 
@@ -115,6 +116,51 @@ def me(claims: dict = Depends(get_current_user_claims)):
         business_name=business_name,
         role=role
     )
+
+"""Nicholas - Task 4.4: update your own name and/or email"""
+@app.patch("/api/account", response_model=AccountResponse)
+def update_account(data: AccountUpdate, claims: dict = Depends(get_current_user_claims)):
+    if data.name is None and data.email is None:
+        raise HTTPException(status_code=422, detail="Send a name, an email, or both")
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                # COALESCE keeps the old value for whichever field wasn't sent.
+                cur.execute(
+                    """UPDATE users
+                       SET name = COALESCE(%s, name), email = COALESCE(%s, email)
+                       WHERE id = %s
+                       RETURNING name, email""",
+                    (data.name, data.email, claims["sub"]),
+                )
+                row = cur.fetchone()
+    except psycopg.errors.UniqueViolation:
+        raise HTTPException(status_code=409, detail="Email already registered")
+
+    if row is None:
+        raise HTTPException(status_code=401, detail="Account no longer exists")
+    return AccountResponse(name=row[0], email=row[1])
+
+"""Nicholas - Task 4.4: change your password (must know the current one)"""
+@app.post("/api/account/password", status_code=204)
+def change_password(data: PasswordChange, claims: dict = Depends(get_current_user_claims)):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT password_hash FROM users WHERE id = %s", (claims["sub"],))
+            row = cur.fetchone()
+            if row is None:
+                raise HTTPException(status_code=401, detail="Account no longer exists")
+
+            # 400, not 401: a wrong current password shouldn't log the user out.
+            if not verify_password(data.current_password, row[0]):
+                raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+            cur.execute(
+                "UPDATE users SET password_hash = %s WHERE id = %s",
+                (hash_password(data.new_password), claims["sub"]),
+            )
+
+
 # Nicholas - serve the frontend pages from the same server as the API, so the forms' fetch("/api/...") 
 # calls reach the backend. MUST stay at the BOTTOM so the /api routes above take priority.
 app.mount("/", StaticFiles(directory=".", html=True), name="frontend")

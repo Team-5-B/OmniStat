@@ -333,3 +333,10 @@ body.app-page {
     color: #555;
     line-height: 1.8;
 }
+
+/* Nicholas - Task 3.11: dashboard empty state */
+.chart-message {
+    padding: 40px 20px;
+    text-align: center;
+    color: #64748b;
+}
