@@ -23,7 +23,6 @@
         </div>
     </nav>
     <main class="dashboard-container">
-    <main class="dashboard-container">
         <h1>OmniStat Dashboard</h1>
         <p>Welcome to your business dashboard!</p>
 
@@ -34,7 +33,7 @@
             </div>
 
             <div class="card">
-                <h2>Total Orders</h2>
+                <h2>Items Sold</h2>
                 <p>0</p>
             </div>
 
@@ -46,10 +45,11 @@
         <!-- Nicholas - Task 2.7: revenue chart -->
         <section class="chart-section">
             <h2>Revenue, Last 30 Days</h2>
-            <p class="sample-label">Sample data</p>
             <div class="chart-box">
                 <canvas id="revenue-chart"></canvas>
             </div>
+            <!-- Nicholas - Task 3.11: empty state / error message, hidden until needed -->
+            <p id="chart-message" class="chart-message" hidden></p>
         </section>
         <section class="upload-section">
     <h2>Upload Sales Data</h2>
