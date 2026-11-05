@@ -172,4 +172,7 @@ app.include_router(siddartha_sprint2_router)
 from backend.uploads import router as uploads_router
 app.include_router(uploads_router)
 
+from backend.sales_intelligence import router as sales_intelligence_router
+app.include_router(sales_intelligence_router)
+
 app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")
