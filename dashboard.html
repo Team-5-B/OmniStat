@@ -10,10 +10,11 @@
     <nav class="top-nav">
         <a href="dashboard.html" class="nav-brand">OmniStat</a>
         <div class="nav-links">
-            <a href="dashboard.html" class="active">Overview</a>
-            <a href="inventory.html">Inventory</a>
-            <a href="reports.html">Reports</a>
-        </div>
+    <a href="dashboard.html" class="active">Overview</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="reports.html">Reports</a>
+    <a href="account.html">Account</a>
+</div>
         <div class="nav-user">
             <div class="nav-user-text">
                 <span id="userName"></span>
@@ -53,14 +54,21 @@
         </section>
         <section class="upload-section">
     <h2>Upload Sales Data</h2>
+
     <div class="upload-box">
         <h3>Upload CSV File</h3>
-        <p>Drag and drop your CSV file here</p>
-        <p>or</p>
-        <span class="upload-button">Choose File</span>
-        <p>Coming Soon</p>
+        <p>Select a CSV file from your computer.</p>
+
+        <input type="file" id="csvFile" accept=".csv,text/csv">
+
+        <p id="fileMessage">No file selected</p>
+
+        <button type="button" id="uploadButton">
+            Upload File
+        </button>
     </div>
 </section>
+
     </main>
     <script>
     const token = localStorage.getItem("token");
@@ -88,6 +96,39 @@
         });
     }
 </script>
+        
+<script>
+    const csvFile = document.getElementById("csvFile");
+    const fileMessage = document.getElementById("fileMessage");
+    const uploadButton = document.getElementById("uploadButton");
+
+    csvFile.addEventListener("change", function () {
+        if (csvFile.files.length > 0) {
+            const file = csvFile.files[0];
+
+            if (!file.name.toLowerCase().endsWith(".csv")) {
+                fileMessage.textContent = "Please choose a CSV file.";
+                csvFile.value = "";
+                return;
+            }
+
+            fileMessage.textContent = "Selected: " + file.name;
+        } else {
+            fileMessage.textContent = "No file selected";
+        }
+    });
+
+    uploadButton.addEventListener("click", function () {
+        if (csvFile.files.length === 0) {
+            fileMessage.textContent = "Please select a CSV file first.";
+            return;
+        }
+
+        fileMessage.textContent =
+            "File selected. Backend upload is not connected yet.";
+    });
+</script>
+
 <!-- Nicholas - Task 2.6: logout button -->
 <script src="logout.js"></script>
 

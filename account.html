@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniStat Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+
+    <nav class="top-nav">
+        <a href="dashboard.html" class="nav-brand">OmniStat</a>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Overview</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="reports.html">Reports</a>
+            <a href="account.html" class="active">Account</a>
+        </div>
+
+        <div class="nav-user">
+            <div class="nav-user-text">
+                <span id="userName"></span>
+                <span id="businessName"></span>
+            </div>
+            <button id="logoutButton" type="button">Log Out</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <h1>My Account</h1>
+        <p>View your account and business details.</p>
+
+        <section class="card">
+            <h2>Account Information</h2>
+
+            <p id="message">Loading account information...</p>
+
+            <div id="accountInfo" hidden>
+                <p>Name: <span id="accountName"></span></p>
+                <p>Email: <span id="accountEmail"></span></p>
+                <p>Business: <span id="accountBusiness"></span></p>
+                <div id="editBusinessSection" style="margin-top: 15px;" hidden>
+    <label for="businessNameInput">Edit Business Name:</label>
+    <input type="text" id="businessNameInput"
+           placeholder="Enter business name">
+    <button type="button" id="saveBusinessButton">
+        Save Changes
+    </button>
+    <p id="businessMessage"></p>
+</div>
+                <p>Role: <span id="accountRole"></span></p>
+            </div>
+        </section>
+        
+        <section class="card" style="margin-top: 25px;">
+            <h2>Team Members</h2>
+            <p id="teamMessage">Team information will appear here.</p>
+            <div id="teamList"></div>
+        </section>
+<section class="card" id="inviteSection"
+         style="margin-top: 25px;" hidden>
+    <h2>Invite Employee</h2>
+    <p>Create an invitation link for a new employee.</p>
+
+    <button type="button" id="inviteButton">
+        Generate Invite Link
+    </button>
+
+    <p id="inviteMessage"></p>
+    <p id="inviteLink"></p>
+</section>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "signin.html";
+        } else {
+            fetch("/api/auth/me", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Could not load account");
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("userName").textContent = data.name;
+                document.getElementById("businessName").textContent = data.business_name;
+
+                document.getElementById("accountName").textContent = data.name;
+                document.getElementById("accountEmail").textContent = data.email;
+                document.getElementById("accountBusiness").textContent = data.business_name;
+                document.getElementById("accountRole").textContent = data.role;
+
+                document.getElementById("message").hidden = true;
+                document.getElementById("accountInfo").hidden = false;
+                document.getElementById("editBusinessSection").hidden =
+    data.role !== "owner";
+                document.getElementById("inviteSection").hidden =
+    data.role !== "owner";
+if (data.role === "owner") {
+    fetch("/api/business/team", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Could not load team");
+        }
+        return response.json();
+    })
+    .then(teamData => {
+        const teamList = document.getElementById("teamList");
+        const teamMessage = document.getElementById("teamMessage");
+
+        teamList.innerHTML = "";
+
+        teamData.members.forEach(member => {
+            const p = document.createElement("p");
+            p.textContent = member.name + " - " +
+                member.email + " (" + member.role + ")";
+            teamList.appendChild(p);
+        });
+
+        teamMessage.textContent = teamData.members.length === 0
+            ? "No team members found."
+            : "";
+    })
+    .catch(error => {
+        document.getElementById("teamMessage").textContent =
+            "Unable to load team members.";
+        console.error(error);
+    });
+} else {
+    document.getElementById("teamMessage").textContent =
+        "Team management is only available to business owners.";
+}
+
+                
+            })
+            .catch(error => {
+                document.getElementById("message").textContent =
+                    "Unable to load account information.";
+                console.error(error);
+            });
+        }
+    </script>
+
+<script>
+    const saveBusinessButton = document.getElementById("saveBusinessButton");
+
+    saveBusinessButton.addEventListener("click", function () {
+        const businessName = document.getElementById("businessNameInput").value.trim();
+        const businessMessage = document.getElementById("businessMessage");
+
+        if (businessName === "") {
+            businessMessage.textContent = "Please enter a business name.";
+            return;
+        }
+
+        businessMessage.textContent = "Saving...";
+
+        fetch("/api/business", {
+            method: "PATCH",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: businessName })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Could not update business name");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("accountBusiness").textContent = data.name;
+            document.getElementById("businessName").textContent = data.name;
+            businessMessage.textContent = "Business name updated!";
+        })
+        .catch(error => {
+            businessMessage.textContent = "Unable to update business name.";
+            console.error(error);
+        });
+    });
+</script>
+<script>
+    const inviteButton = document.getElementById("inviteButton");
+
+    inviteButton.addEventListener("click", function () {
+        const inviteMessage = document.getElementById("inviteMessage");
+        const inviteLink = document.getElementById("inviteLink");
+
+        inviteMessage.textContent = "Generating invite link...";
+        inviteLink.textContent = "";
+
+        fetch("/api/invites", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                role: "employee",
+                expires_in_days: 7
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Could not create invite");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const link = new URL(data.invite_url, window.location.href).href;
+            inviteMessage.textContent = "Invite link created!";
+            inviteLink.textContent = link;
+        })
+        .catch(error => {
+            inviteMessage.textContent = "Unable to create invite link.";
+            console.error(error);
+        });
+    });
+</script>
+    <script src="logout.js"></script>
+</body>
+</html>
