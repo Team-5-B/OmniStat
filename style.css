@@ -1,3 +1,20 @@
+:root {
+    --page: #f5f7fb;
+    --text: #222;
+    --surface: white;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --muted: #666;
+    --border: #ccc;
+    --heading: #555;
+    --strong: #333;
+    --subtle: #f8fafc;
+    --secondary: #888;
+    --highlight: #eff4ff;
+    --shadow: rgba(0, 0, 0, 0.08);
+    --nav-shadow: rgba(0, 0, 0, 0.06);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,8 +23,8 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f7fb;
-    color: #222;
+    background-color: var(--page);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -15,16 +32,16 @@ body {
 }
 
 .signup-container {
-    background-color: white;
+    background-color: var(--surface);
     padding: 40px;
     width: 420px;
     max-width: 90%;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px var(--shadow);
 }
 
 .signup-container h2 {
-    color: #2563eb;
+    color: var(--primary);
     text-align: center;
     margin-bottom: 25px;
 }
@@ -35,7 +52,7 @@ body {
 }
 
 .signup-container p {
-    color: #666;
+    color: var(--muted);
     font-size: 14px;
     margin-bottom: 25px;
 }
@@ -54,19 +71,19 @@ body {
 .signup-container input {
     padding: 12px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 14px;
 }
 
 .signup-container input:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: var(--primary);
 }
 
 .signup-container button {
-    background-color: #2563eb;
-    color: white;
+    background-color: var(--primary);
+    color: var(--surface);
     padding: 14px;
     border: none;
     border-radius: 6px;
@@ -76,11 +93,11 @@ body {
 }
 
 .signup-container button:hover {
-    background-color: #1d4ed8;
+    background-color: var(--primary-hover);
 }
 
 .signup-container a {
-    color: #2563eb;
+    color: var(--primary);
     text-decoration: none;
 }
 
@@ -97,75 +114,80 @@ body {
 }
 
 .dashboard-container h1 {
-    color: #2563eb;
+    color: var(--primary);
     font-size: 32px;
     margin-bottom: 10px;
 }
 
 .dashboard-container > p {
-    color: #666;
+    color: var(--muted);
     margin-bottom: 30px;
 }
 
 .dashboard-cards {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: 20px;
-    flex-wrap: wrap;
 }
 
 .card {
-    background-color: white;
+    background-color: var(--surface);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    flex: 1;
-    min-width: 200px;
+    box-shadow: 0 4px 12px var(--shadow);
+    min-width: 0;
 }
 
 .card h2 {
     font-size: 18px;
-    color: #555;
+    color: var(--heading);
     margin-bottom: 15px;
 }
 
-.card p {
+.dashboard-cards .card p {
     font-size: 28px;
     font-weight: bold;
-    color: #2563eb;
+    color: var(--primary);
 }
 
 .upload-section {
     margin-top: 30px;
-    padding: 20px;
+    padding: 24px;
+    background-color: var(--surface);
+    border-radius: 12px;
 }
 
 .upload-section h2 {
     margin-bottom: 20px;
-    color: #333;
+    color: var(--strong);
 }
 
 .upload-box {
-    border: 2px dashed #2563eb;
+    border: 2px dashed var(--primary);
     border-radius: 10px;
-    padding: 40px;
+    padding: clamp(16px, 4vw, 40px);
     text-align: center;
-    background-color: #f8fafc;
+    background-color: var(--subtle);
 }
 
 .upload-box h3 {
     margin-bottom: 15px;
-    color: #2563eb;
+    color: var(--primary);
 }
 
 .upload-box p {
     margin: 10px 0;
-    color: #666;
+    color: var(--muted);
 }
 
-.upload-button {
-    display: inline-block;
-    background-color: #2563eb;
-    color: white;
+.upload-button,
+.upload-box button,
+.account-container button:not(#logoutButton) {
+    font: inherit;
+    border: 0;
+    cursor: pointer;
+    background-color: var(--primary);
+    color: var(--surface);
     padding: 12px 25px;
     border-radius: 6px;
     margin-top: 10px;
@@ -174,20 +196,20 @@ body {
 /* Nicholas - Task 2.7: revenue chart */
 .chart-section {
     margin-top: 30px;
-    background-color: white;
+    background-color: var(--surface);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px var(--shadow);
 }
 
 .chart-section h2 {
     font-size: 18px;
-    color: #555;
+    color: var(--heading);
 }
 
 .sample-label {
     font-size: 13px;
-    color: #888;
+    color: var(--secondary);
     margin: 4px 0 20px;
 }
 
@@ -211,14 +233,14 @@ body.app-page {
     justify-content: space-between;
     gap: 20px;
     padding: 14px 32px;
-    background-color: white;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    background-color: var(--surface);
+    box-shadow: 0 2px 12px var(--nav-shadow);
 }
 
 .nav-brand {
     font-size: 22px;
     font-weight: bold;
-    color: #2563eb;
+    color: var(--primary);
     text-decoration: none;
 }
 
@@ -230,19 +252,19 @@ body.app-page {
 .nav-links a {
     padding: 8px 16px;
     border-radius: 6px;
-    color: #555;
+    color: var(--heading);
     text-decoration: none;
     font-size: 15px;
 }
 
 .nav-links a:hover {
-    background-color: #eff4ff;
-    color: #2563eb;
+    background-color: var(--highlight);
+    color: var(--primary);
 }
 
 .nav-links a.active {
-    background-color: #2563eb;
-    color: white;
+    background-color: var(--primary);
+    color: var(--surface);
 }
 
 .nav-user {
@@ -265,22 +287,22 @@ body.app-page {
 
 #businessName {
     font-size: 12px;
-    color: #888;
+    color: var(--secondary);
 }
 
 #logoutButton {
     padding: 8px 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 6px;
-    background-color: white;
-    color: #333;
+    background-color: var(--surface);
+    color: var(--strong);
     font-size: 14px;
     cursor: pointer;
 }
 
 #logoutButton:hover {
-    border-color: #2563eb;
-    color: #2563eb;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 /* for phones stack the brand and user on top, links underneath */
@@ -294,6 +316,7 @@ body.app-page {
         order: 3;
         width: 100%;
         justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     .dashboard-container {
@@ -304,10 +327,10 @@ body.app-page {
 
 /* Nicholas - Task 2.11: placeholder page layout */
 .placeholder-card {
-    background-color: white;
+    background-color: var(--surface);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px var(--shadow);
     max-width: 600px;
 }
 
@@ -315,8 +338,8 @@ body.app-page {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 999px;
-    background-color: #eff4ff;
-    color: #2563eb;
+    background-color: var(--highlight);
+    color: var(--primary);
     font-size: 13px;
     font-weight: bold;
     margin-bottom: 16px;
@@ -324,13 +347,13 @@ body.app-page {
 
 .placeholder-card h2 {
     font-size: 18px;
-    color: #333;
+    color: var(--strong);
     margin-bottom: 12px;
 }
 
 .placeholder-card ul {
     padding-left: 20px;
-    color: #555;
+    color: var(--heading);
     line-height: 1.8;
 }
 
@@ -338,5 +361,73 @@ body.app-page {
 .chart-message {
     padding: 40px 20px;
     text-align: center;
-    color: #64748b;
+    color: var(--muted);
+}
+.upload-box input {
+    max-width: 100%;
+}
+
+.upload-box p,
+.account-container p,
+.team-member {
+    overflow-wrap: anywhere;
+}
+
+.upload-box button:hover,
+.account-container button:not(#logoutButton):hover {
+    background-color: var(--primary-hover);
+}
+
+.account-container .card + .card {
+    margin-top: 20px;
+}
+
+.account-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.account-details dt {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.account-details dd {
+    overflow-wrap: anywhere;
+}
+
+.account-container label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.account-container input {
+    font: inherit;
+    padding: 10px;
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.account-container [role="status"]:not(:empty) {
+    margin-top: 10px;
+    color: var(--muted);
+}
+
+.team-list {
+    list-style: none;
+}
+
+.team-member {
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+}
+
+.team-member span {
+    display: block;
+    color: var(--muted);
+    margin-top: 4px;
 }
