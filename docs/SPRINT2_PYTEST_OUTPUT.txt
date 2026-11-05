@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.1, pytest-9.2.0, pluggy-1.7.0 -- /Users/siddarthareddypagilla/Omnistat nov/OmniStat/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/siddarthareddypagilla/Omnistat nov/OmniStat
+plugins: anyio-4.16.0
+collecting ... collected 37 items
+
+tests/test_account.py::test_update_name_only_keeps_email PASSED          [  2%]
+tests/test_account.py::test_update_email_is_lowercased PASSED            [  5%]
+tests/test_account.py::test_update_email_taken_by_someone_else PASSED    [  8%]
+tests/test_account.py::test_update_rejects_empty_body_and_no_token PASSED [ 10%]
+tests/test_account.py::test_change_password_success PASSED               [ 13%]
+tests/test_account.py::test_change_password_wrong_current_or_short_new PASSED [ 16%]
+tests/test_auth.py::test_register_creates_all_three_rows_and_bcrypt_hash PASSED [ 18%]
+tests/test_auth.py::test_duplicate_email_rolls_back_new_business PASSED  [ 21%]
+tests/test_auth.py::test_login_correct_and_wrong_password PASSED         [ 24%]
+tests/test_auth.py::test_missing_user_and_bad_input PASSED               [ 27%]
+tests/test_auth.py::test_tampered_token_rejected PASSED                  [ 29%]
+tests/test_me.py::test_me_returns_user_and_business PASSED               [ 32%]
+tests/test_me.py::test_me_rejects_missing_token PASSED                   [ 35%]
+tests/test_me.py::test_me_rejects_fake_token PASSED                      [ 37%]
+tests/test_me.py::test_me_rejects_token_for_deleted_user PASSED          [ 40%]
+tests/test_owner.py::test_owner_allowed PASSED                           [ 43%]
+tests/test_owner.py::test_employee_blocked PASSED                        [ 45%]
+tests/test_owner.py::test_no_membership PASSED                           [ 48%]
+tests/test_owner.py::test_owner_requires_login PASSED                    [ 51%]
+tests/test_siddartha_sprint2.py::test_dashboard_kpis_and_30_days PASSED  [ 54%]
+tests/test_siddartha_sprint2.py::test_dashboard_empty_state PASSED       [ 56%]
+tests/test_siddartha_sprint2.py::test_dashboard_requires_auth_and_active_membership PASSED [ 59%]
+tests/test_siddartha_sprint2.py::test_only_owner_can_list_team_and_update_business PASSED [ 62%]
+tests/test_siddartha_sprint2.py::test_invite_creation_lookup_and_expiry PASSED [ 64%]
+tests/test_siddartha_sprint2.py::test_employee_removal_is_business_scoped_and_revokes_access PASSED [ 67%]
+tests/test_siddartha_sprint2.py::test_frontend_mount_does_not_publish_project_secrets PASSED [ 70%]
+tests/test_siddartha_sprint2.py::test_expired_invite_is_rejected PASSED  [ 72%]
+tests/test_upload_parser.py::test_omnistat_simple_format PASSED          [ 75%]
+tests/test_upload_parser.py::test_square_format_and_refunds PASSED       [ 78%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,abc,4.50\n] PASSED [ 81%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,1,nan\n] PASSED [ 83%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,1,1.001\n] PASSED [ 86%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-99-04,Tea,Drinks,1,4.50\n] PASSED [ 89%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[Date,Product\n2026-11-04,Tea\n] PASSED [ 91%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n] PASSED [ 94%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,1,4.50,extra\n] PASSED [ 97%]
+tests/test_upload_parser.py::test_both_example_files PASSED              [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/siddarthareddypagilla/Omnistat nov/OmniStat/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 37 passed, 1 warning in 5.96s =========================
