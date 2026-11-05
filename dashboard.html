@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OmniStat Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="sales-intelligence.css">
 </head>
-<body class="app-page">
+<body class="app-page si-page">
     <nav class="top-nav">
         <a href="dashboard.html" class="nav-brand">OmniStat</a>
         <div class="nav-links">
@@ -24,6 +25,95 @@
         </div>
     </nav>
     <main class="dashboard-container">
+<!-- Siddartha: Sales Intelligence (additive dashboard module). -->
+<section id="sales-intelligence" class="si-shell" aria-labelledby="si-title">
+  <header class="si-hero">
+    <div>
+      <h1 id="si-title">Sales Intelligence</h1>
+      <p>Understand your store's performance and product mix from uploaded POS sales.</p>
+    </div>
+    <div class="si-actions">
+      <label for="si-range">Date range</label>
+      <select id="si-range" aria-label="Reporting period">
+        <option value="7">Last 7 days</option>
+        <option value="30" selected>Last 30 days</option>
+        <option value="90">Last 90 days</option>
+      </select>
+      <button class="si-btn" type="button" id="si-upload-shortcut">Upload CSV</button>
+    </div>
+  </header>
+  <div class="si-status" id="si-status" role="status" aria-live="polite">Loading your sales data…</div>
+  <section class="si-empty" id="si-empty" hidden>
+    <h2>No sales in this period yet</h2>
+    <p id="si-empty-period">Upload a POS report or choose a longer period to start exploring your sales.</p>
+    <p>Use the Upload Sales section below to import a CSV.</p>
+  </section>
+  <div class="si-content" id="si-content" hidden>
+    <section class="si-kpi-grid" aria-label="Business key performance indicators">
+      <article class="si-card si-kpi"><span class="si-eyebrow">Net Sales</span><strong id="si-net-sales">—</strong><small>Signed net sales, including refunds</small></article>
+      <article class="si-card si-kpi"><span class="si-eyebrow">Units Sold</span><strong id="si-units">—</strong><small>Net product quantities</small></article>
+      <article class="si-card si-kpi"><span class="si-eyebrow">Products Sold</span><strong id="si-products">—</strong><small>Distinct products with positive units</small></article>
+      <article class="si-card si-kpi"><span class="si-eyebrow">Revenue Growth</span><strong id="si-growth">—</strong><small id="si-growth-note">Vs. previous period</small></article>
+    </section>
+    <section class="si-panel-grid">
+      <article class="si-card si-panel" aria-labelledby="si-revenue-title">
+        <div class="si-table-head">
+          <div><h2 id="si-revenue-title">Revenue Trend</h2><p class="si-subtitle">Net sales for <span id="si-current-window">the selected period</span></p></div>
+          <label for="si-granularity"><span class="si-subtitle">Group by </span><select id="si-granularity"><option value="daily">Day</option><option value="monthly">Month</option></select></label>
+        </div>
+        <div class="si-plot" id="si-trend"></div>
+      </article>
+      <article class="si-card si-panel" aria-labelledby="si-mix-title">
+        <h2 id="si-mix-title">Product Mix by Category</h2>
+        <p class="si-subtitle">How product categories contribute to positive net sales</p>
+        <div class="si-legend-row">
+          <div class="si-donut" id="si-donut" role="img" aria-label="Sales distribution by category">
+            <div class="si-donut-label"><strong id="si-donut-total">—</strong><span>Total Net Sales</span></div>
+          </div>
+          <ul class="si-category-legend" id="si-category-legend"></ul>
+        </div>
+        <p class="si-footer-note" id="si-category-note"></p>
+      </article>
+    </section>
+    <section class="si-panel-grid">
+      <article class="si-card si-panel" aria-labelledby="si-products-title">
+        <div class="si-table-head">
+          <div><h2 id="si-products-title">Top Selling Products</h2><p class="si-subtitle">Rankings from real uploaded sales, not inventory estimates</p></div>
+          <label for="si-ranking"><span class="si-subtitle">Rank by </span><select id="si-ranking"><option value="revenue">Net revenue</option><option value="units">Units sold</option></select></label>
+        </div>
+        <div class="si-table-wrap">
+          <table class="si-table"><thead><tr><th scope="col">Product</th><th scope="col">Category</th><th scope="col">Units</th><th scope="col">Net Sales</th><th scope="col">Revenue Share</th><th scope="col">Growth*</th></tr></thead><tbody id="si-products-body"></tbody></table>
+        </div>
+        <p class="si-footer-note">*Product growth is shown only where the previous period has a positive revenue baseline.</p>
+      </article>
+      <article class="si-card si-panel" aria-labelledby="si-insights-title">
+        <h2 id="si-insights-title">Business Insights</h2>
+        <p class="si-subtitle">Data-driven observations to guide your decisions</p>
+        <ul class="si-insights" id="si-insights"></ul>
+      </article>
+    </section>
+    <section class="si-card si-panel" aria-labelledby="si-slow-title">
+      <h2 id="si-slow-title">Low-Volume Products to Review</h2>
+      <p class="si-subtitle">Products appearing in uploaded sales with the fewest positive net units. Not proof of excess inventory or low demand.</p>
+      <ul class="si-mini-list" id="si-slow-movers"></ul>
+    </section>
+    <section class="si-panel-grid" style="margin-top:17px;">
+      <article class="si-card si-panel" aria-labelledby="si-category-performance-title">
+        <h2 id="si-category-performance-title">Category Performance Comparison</h2>
+        <p class="si-subtitle">Net sales and change versus the preceding equal-length period</p>
+        <div class="si-table-wrap"><table class="si-table"><thead><tr><th scope="col">Category</th><th scope="col">Net Units</th><th scope="col">Net Sales</th><th scope="col">Prior Sales</th><th scope="col">Growth</th></tr></thead><tbody id="si-category-body"></tbody></table></div>
+      </article>
+      <article class="si-card si-panel" aria-labelledby="si-weekday-title">
+        <h2 id="si-weekday-title">Day-of-Week Performance</h2>
+        <p class="si-subtitle">Average net sales per calendar day, including zero-sales days</p>
+        <div id="si-weekday-bars" class="si-weekday-bars"></div>
+      </article>
+    </section>
+    <p class="si-disclaimer" id="si-updated"></p>
+    <p class="si-disclaimer">Order count, average order value, profit margin, inventory replenishment and customer retention require additional source data and are intentionally not estimated.</p>
+  </div>
+</section>
+
         <h1>OmniStat Dashboard</h1>
         <p>Welcome to your business dashboard!</p>
 
@@ -162,5 +252,6 @@
 <!-- Nicholas - Tasks 2.7 and 2.8: chart library + chart and KPI card code -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <script src="dashboard.js"></script>
+    <script src="sales-intelligence.js"></script>
 </body>
 </html>
