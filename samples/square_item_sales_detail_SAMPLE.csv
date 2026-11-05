@@ -1,0 +1,53 @@
+Date,Time,Time Zone,Category,Item,Qty,Price Point Name,SKU,Modifiers Applied,Gross Sales,Discounts,Net Sales,Tax,Transaction ID,Location,Dining Option
+2026-10-19,11:00:00,America/Chicago,Beverages,Thai Tea,1,Regular,DRK101,,5.00,0.50,4.50,0.37,OS-20261019-0001,Demo Restaurant,Takeout
+2026-10-20,18:11:00,America/Chicago,Desserts,Mango Sticky Rice,2,Regular,DSR102,,17.00,0.00,17.00,1.40,OS-20261020-0002,Demo Restaurant,Dine-in
+2026-10-21,15:22:00,America/Chicago,Entrees,Pad Thai,3,Regular,ENT103,,40.50,0.00,40.50,3.34,OS-20261021-0003,Demo Restaurant,Dine-in
+2026-10-22,12:33:00,America/Chicago,Entrees,Green Curry,4,Regular,ENT104,,56.00,0.00,56.00,4.62,OS-20261022-0004,Demo Restaurant,Takeout
+2026-10-23,19:44:00,America/Chicago,Appetizers,Spring Rolls,1,Regular,APP105,,6.50,0.00,6.50,0.54,OS-20261023-0005,Demo Restaurant,Dine-in
+2026-10-24,16:55:00,America/Chicago,Beverages,Iced Coffee,2,Regular,DRK106,,9.00,0.00,9.00,0.74,OS-20261024-0006,Demo Restaurant,Dine-in
+2026-10-25,13:06:00,America/Chicago,Beverages,Thai Tea,3,Regular,DRK101,,15.00,0.00,15.00,1.24,OS-20261025-0007,Demo Restaurant,Takeout
+2026-10-26,20:17:00,America/Chicago,Desserts,Mango Sticky Rice,4,Regular,DSR102,,34.00,0.00,34.00,2.81,OS-20261026-0008,Demo Restaurant,Dine-in
+2026-10-27,17:28:00,America/Chicago,Entrees,Pad Thai,1,Regular,ENT103,,13.50,0.00,13.50,1.11,OS-20261027-0009,Demo Restaurant,Dine-in
+2026-10-28,14:39:00,America/Chicago,Entrees,Green Curry,2,Regular,ENT104,,28.00,0.00,28.00,2.31,OS-20261028-0010,Demo Restaurant,Takeout
+2026-10-29,11:50:00,America/Chicago,Appetizers,Spring Rolls,3,Regular,APP105,,19.50,0.00,19.50,1.61,OS-20261029-0011,Demo Restaurant,Dine-in
+2026-10-30,18:01:00,America/Chicago,Beverages,Iced Coffee,4,Regular,DRK106,,18.00,0.00,18.00,1.49,OS-20261030-0012,Demo Restaurant,Dine-in
+2026-10-31,15:12:00,America/Chicago,Beverages,Thai Tea,1,Regular,DRK101,,5.00,0.00,5.00,0.41,OS-20261031-0013,Demo Restaurant,Takeout
+2026-11-01,12:23:00,America/Chicago,Desserts,Mango Sticky Rice,2,Regular,DSR102,,17.00,1.70,15.30,1.26,OS-20261101-0014,Demo Restaurant,Dine-in
+2026-11-02,19:34:00,America/Chicago,Entrees,Pad Thai,3,Regular,ENT103,,40.50,0.00,40.50,3.34,OS-20261102-0015,Demo Restaurant,Dine-in
+2026-11-03,16:45:00,America/Chicago,Entrees,Green Curry,4,Regular,ENT104,,56.00,0.00,56.00,4.62,OS-20261103-0016,Demo Restaurant,Takeout
+2026-11-04,13:56:00,America/Chicago,Appetizers,Spring Rolls,1,Regular,APP105,,6.50,0.00,6.50,0.54,OS-20261104-0017,Demo Restaurant,Dine-in
+2026-10-19,20:07:00,America/Chicago,Beverages,Iced Coffee,2,Regular,DRK106,,9.00,0.00,9.00,0.74,OS-20261019-0018,Demo Restaurant,Dine-in
+2026-10-20,17:18:00,America/Chicago,Beverages,Thai Tea,3,Regular,DRK101,,15.00,0.00,15.00,1.24,OS-20261020-0019,Demo Restaurant,Takeout
+2026-10-21,14:29:00,America/Chicago,Desserts,Mango Sticky Rice,4,Regular,DSR102,,34.00,0.00,34.00,2.81,OS-20261021-0020,Demo Restaurant,Dine-in
+2026-10-22,11:40:00,America/Chicago,Entrees,Pad Thai,1,Regular,ENT103,,13.50,0.00,13.50,1.11,OS-20261022-0021,Demo Restaurant,Dine-in
+2026-10-23,18:51:00,America/Chicago,Entrees,Green Curry,2,Regular,ENT104,,28.00,0.00,28.00,2.31,OS-20261023-0022,Demo Restaurant,Takeout
+2026-10-24,15:02:00,America/Chicago,Appetizers,Spring Rolls,3,Regular,APP105,,19.50,0.00,19.50,1.61,OS-20261024-0023,Demo Restaurant,Dine-in
+2026-10-25,12:13:00,America/Chicago,Beverages,Iced Coffee,4,Regular,DRK106,,18.00,0.00,18.00,1.49,OS-20261025-0024,Demo Restaurant,Dine-in
+2026-10-26,19:24:00,America/Chicago,Beverages,Thai Tea,1,Regular,DRK101,,5.00,0.00,5.00,0.41,OS-20261026-0025,Demo Restaurant,Takeout
+2026-10-27,16:35:00,America/Chicago,Desserts,Mango Sticky Rice,2,Regular,DSR102,,17.00,0.00,17.00,1.40,OS-20261027-0026,Demo Restaurant,Dine-in
+2026-10-28,13:46:00,America/Chicago,Entrees,Pad Thai,3,Regular,ENT103,,40.50,4.05,36.45,3.01,OS-20261028-0027,Demo Restaurant,Dine-in
+2026-10-29,20:57:00,America/Chicago,Entrees,Green Curry,4,Regular,ENT104,,56.00,0.00,56.00,4.62,OS-20261029-0028,Demo Restaurant,Takeout
+2026-10-30,17:08:00,America/Chicago,Appetizers,Spring Rolls,1,Regular,APP105,,6.50,0.00,6.50,0.54,OS-20261030-0029,Demo Restaurant,Dine-in
+2026-10-31,14:19:00,America/Chicago,Beverages,Iced Coffee,2,Regular,DRK106,,9.00,0.00,9.00,0.74,OS-20261031-0030,Demo Restaurant,Dine-in
+2026-11-01,11:30:00,America/Chicago,Beverages,Thai Tea,3,Regular,DRK101,,15.00,0.00,15.00,1.24,OS-20261101-0031,Demo Restaurant,Takeout
+2026-11-02,18:41:00,America/Chicago,Desserts,Mango Sticky Rice,4,Regular,DSR102,,34.00,0.00,34.00,2.81,OS-20261102-0032,Demo Restaurant,Dine-in
+2026-11-03,15:52:00,America/Chicago,Entrees,Pad Thai,1,Regular,ENT103,,13.50,0.00,13.50,1.11,OS-20261103-0033,Demo Restaurant,Dine-in
+2026-11-04,12:03:00,America/Chicago,Entrees,Green Curry,2,Regular,ENT104,,28.00,0.00,28.00,2.31,OS-20261104-0034,Demo Restaurant,Takeout
+2026-10-19,19:14:00,America/Chicago,Appetizers,Spring Rolls,3,Regular,APP105,,19.50,0.00,19.50,1.61,OS-20261019-0035,Demo Restaurant,Dine-in
+2026-10-20,16:25:00,America/Chicago,Beverages,Iced Coffee,4,Regular,DRK106,,18.00,0.00,18.00,1.49,OS-20261020-0036,Demo Restaurant,Dine-in
+2026-10-21,13:36:00,America/Chicago,Beverages,Thai Tea,1,Regular,DRK101,,5.00,0.00,5.00,0.41,OS-20261021-0037,Demo Restaurant,Takeout
+2026-10-22,20:47:00,America/Chicago,Desserts,Mango Sticky Rice,2,Regular,DSR102,,17.00,0.00,17.00,1.40,OS-20261022-0038,Demo Restaurant,Dine-in
+2026-10-23,17:58:00,America/Chicago,Entrees,Pad Thai,3,Regular,ENT103,,40.50,0.00,40.50,3.34,OS-20261023-0039,Demo Restaurant,Dine-in
+2026-10-24,14:09:00,America/Chicago,Entrees,Green Curry,4,Regular,ENT104,,56.00,5.60,50.40,4.16,OS-20261024-0040,Demo Restaurant,Takeout
+2026-10-25,11:20:00,America/Chicago,Appetizers,Spring Rolls,1,Regular,APP105,,6.50,0.00,6.50,0.54,OS-20261025-0041,Demo Restaurant,Dine-in
+2026-10-26,18:31:00,America/Chicago,Beverages,Iced Coffee,2,Regular,DRK106,,9.00,0.00,9.00,0.74,OS-20261026-0042,Demo Restaurant,Dine-in
+2026-10-27,15:42:00,America/Chicago,Beverages,Thai Tea,3,Regular,DRK101,,15.00,0.00,15.00,1.24,OS-20261027-0043,Demo Restaurant,Takeout
+2026-10-28,12:53:00,America/Chicago,Desserts,Mango Sticky Rice,4,Regular,DSR102,,34.00,0.00,34.00,2.81,OS-20261028-0044,Demo Restaurant,Dine-in
+2026-10-29,19:04:00,America/Chicago,Entrees,Pad Thai,1,Regular,ENT103,,13.50,0.00,13.50,1.11,OS-20261029-0045,Demo Restaurant,Dine-in
+2026-10-30,16:15:00,America/Chicago,Entrees,Green Curry,2,Regular,ENT104,,28.00,0.00,28.00,2.31,OS-20261030-0046,Demo Restaurant,Takeout
+2026-10-31,13:26:00,America/Chicago,Appetizers,Spring Rolls,3,Regular,APP105,,19.50,0.00,19.50,1.61,OS-20261031-0047,Demo Restaurant,Dine-in
+2026-11-01,20:37:00,America/Chicago,Beverages,Iced Coffee,4,Regular,DRK106,,18.00,0.00,18.00,1.49,OS-20261101-0048,Demo Restaurant,Dine-in
+2026-11-02,17:48:00,America/Chicago,Beverages,Thai Tea,1,Regular,DRK101,,5.00,0.00,5.00,0.41,OS-20261102-0049,Demo Restaurant,Takeout
+2026-11-03,14:59:00,America/Chicago,Desserts,Mango Sticky Rice,2,Regular,DSR102,,17.00,0.00,17.00,1.40,OS-20261103-0050,Demo Restaurant,Dine-in
+2026-11-04,11:10:00,America/Chicago,Entrees,Pad Thai,3,Regular,ENT103,,40.50,0.00,40.50,3.34,OS-20261104-0051,Demo Restaurant,Dine-in
+2026-10-19,18:21:00,America/Chicago,Entrees,Green Curry,4,Regular,ENT104,,56.00,0.00,56.00,4.62,OS-20261019-0052,Demo Restaurant,Takeout
