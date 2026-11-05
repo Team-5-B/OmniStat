@@ -7,6 +7,7 @@ import jwt
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from backend.database import get_connection
 
 load_dotenv()
 TOKEN_ALGORITHM = "HS256"
@@ -74,3 +75,27 @@ def get_current_user_claims(
     if credentials is None:
         raise HTTPException(status_code=401, detail="Authorization token required")
     return verify_access_token(credentials.credentials)
+
+def require_owner(claims: dict = Depends(get_current_user_claims)) -> dict:
+    """Allow access only if the user is the business owner."""
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT role
+                FROM memberships
+                WHERE user_id = %s AND business_id = %s
+                """,
+                (claims["sub"], claims["business_id"])
+            )
+
+            result = cur.fetchone()
+
+    if result is None or result[0] != "owner":
+        raise HTTPException(
+            status_code=403,
+            detail="Owner access required"
+        )
+
+    return claims
