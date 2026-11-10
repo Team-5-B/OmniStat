@@ -20,6 +20,28 @@ def health():
     return {"status": "ok"}
 
 
+
+@app.get("/health/database")
+def database_health():
+    """Verify that PostgreSQL is accepting queries."""
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+                cur.fetchone()
+
+        return {
+            "status": "ok",
+            "database": "connected",
+        }
+
+    except psycopg.Error:
+        raise HTTPException(
+            status_code=503,
+            detail="Database temporarily unavailable",
+        )
+
+
 @app.post("/api/auth/register", response_model=AuthResponse, status_code=201)
 def register(data: RegisterRequest):
     """Create business + user + owner membership as ONE atomic transaction.
