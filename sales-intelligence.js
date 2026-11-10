@@ -236,3 +236,142 @@
   if (upload && !upload.id) upload.id = "sales-upload-area";
   refresh();
 })();
+
+/* Owner-only sales reconciliation status */
+(() => {
+  "use strict";
+
+  const panel = document.getElementById("si-data-quality");
+  const range = document.getElementById("si-range");
+
+  if (!panel || !range) return;
+
+  const get = id => document.getElementById(id);
+
+  const badge = get("si-quality-status");
+  const message = get("si-quality-message");
+
+  const format = new Intl.NumberFormat("en-US");
+
+  let latestRequest = 0;
+
+  function setState(type, title, description) {
+    badge.className = "si-quality-badge is-" + type;
+    badge.textContent = title;
+    message.textContent = description;
+  }
+
+  async function refreshQuality() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      panel.hidden = true;
+      return;
+    }
+
+    const request = ++latestRequest;
+    const days = range.value;
+
+    panel.hidden = false;
+
+    setState(
+      "loading",
+      "Checking",
+      "Comparing sales records with dashboard totals..."
+    );
+
+    try {
+      const response = await fetch(
+        "/api/business/data-quality?days="
+          + encodeURIComponent(days),
+        {
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          cache: "no-store"
+        }
+      );
+
+      if (request !== latestRequest) return;
+
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+        panel.hidden = true;
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          "Database verification unavailable (HTTP "
+          + response.status + ")."
+        );
+      }
+
+      const data = await response.json();
+
+      if (request !== latestRequest) return;
+
+      const uploads = Number(data.uploads?.processed || 0);
+      const records = Number(data.line_items?.count || 0);
+      const mismatches = Number(data.mismatch_days || 0);
+
+      get("si-quality-uploads").textContent =
+        format.format(uploads);
+
+      get("si-quality-records").textContent =
+        format.format(records);
+
+      get("si-quality-mismatches").textContent =
+        format.format(mismatches);
+
+      if (mismatches > 0) {
+        const dates = (data.issues || [])
+          .slice(0, 3)
+          .map(issue => issue.date)
+          .join(", ");
+
+        setState(
+          "warning",
+          "Needs Review",
+          mismatches + " day(s) have inconsistent totals."
+            + (dates ? " Affected dates: " + dates : "")
+        );
+
+      } else if (records === 0) {
+        setState(
+          "empty",
+          "No Sales Data",
+          "No sales records found for this reporting period."
+        );
+
+      } else {
+        setState(
+          "good",
+          "Totals Match",
+          "Sales records match daily dashboard totals "
+            + "for the last " + days + " days."
+        );
+      }
+
+    } catch (error) {
+      if (request !== latestRequest) return;
+
+      setState(
+        "error",
+        "Unavailable",
+        error.message || "Unable to verify database totals."
+      );
+    }
+  }
+
+  range.addEventListener("change", refreshQuality);
+
+  document.addEventListener(
+    "omnistat:upload-complete",
+    refreshQuality
+  );
+
+  refreshQuality();
+})();

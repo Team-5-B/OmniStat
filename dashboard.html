@@ -43,6 +43,49 @@
     </div>
   </header>
   <div class="si-status" id="si-status" role="status" aria-live="polite">Loading your sales data…</div>
+
+<!-- Sales Data Quality Monitor -->
+<section id="si-data-quality"
+         class="si-quality-card"
+         aria-label="Sales data quality"
+         hidden>
+
+  <div class="si-quality-header">
+    <div>
+      <h2>Sales Data Quality</h2>
+      <p>Verify that uploaded sales match dashboard totals.</p>
+    </div>
+
+    <span id="si-quality-status"
+          class="si-quality-badge"
+          role="status">
+      Checking
+    </span>
+  </div>
+
+  <div class="si-quality-metrics">
+    <div>
+      <span>Processed Uploads</span>
+      <strong id="si-quality-uploads">—</strong>
+    </div>
+
+    <div>
+      <span>Sales Records</span>
+      <strong id="si-quality-records">—</strong>
+    </div>
+
+    <div>
+      <span>Mismatched Days</span>
+      <strong id="si-quality-mismatches">—</strong>
+    </div>
+  </div>
+
+  <p id="si-quality-message" aria-live="polite">
+    Checking database consistency...
+  </p>
+</section>
+
+
   <section class="si-empty" id="si-empty" hidden>
     <h2>No sales in this period yet</h2>
     <p id="si-empty-period">Upload a POS report or choose a longer period to start exploring your sales.</p>

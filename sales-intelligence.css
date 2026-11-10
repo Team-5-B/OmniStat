@@ -111,3 +111,120 @@ body.si-page .upload-box { background: #f9fbff; }
 .si-weekday-track { height: 12px; border-radius: 999px; overflow: hidden; background: #ecf2fb; }
 .si-weekday-fill { display: block; height: 100%; border-radius: 999px; background: #2866e5; }
 .si-weekday-money { color: #2e4164; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Sales Data Quality Monitor */
+.si-quality-card {
+  background: #ffffff;
+  border: 1px solid #dfe7f3;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0 24px;
+  box-shadow: 0 4px 18px rgba(20, 50, 100, 0.06);
+}
+
+.si-quality-card[hidden] {
+  display: none !important;
+}
+
+.si-quality-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.si-quality-header h2 {
+  color: #17335d;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.si-quality-header p {
+  color: #72819a;
+  font-size: 13px;
+  margin: 0;
+}
+
+.si-quality-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.si-quality-badge.is-good {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.si-quality-badge.is-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.si-quality-badge.is-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.si-quality-badge.is-loading,
+.si-quality-badge.is-empty {
+  background: #eaf1ff;
+  color: #2458b8;
+}
+
+.si-quality-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.si-quality-metrics > div {
+  background: #f5f8fd;
+  border: 1px solid #e8eef7;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.si-quality-metrics span {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 9px;
+}
+
+.si-quality-metrics strong {
+  display: block;
+  color: #163563;
+  font-size: 28px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+#si-quality-message {
+  color: #58677e;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 18px 0 0;
+}
+
+@media (max-width: 700px) {
+  .si-quality-card {
+    padding: 17px;
+  }
+
+  .si-quality-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .si-quality-metrics strong {
+    font-size: 24px;
+  }
+}
