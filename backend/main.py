@@ -202,4 +202,9 @@ app.include_router(sales_intelligence_router)
 from backend.data_quality import router as data_quality_router
 app.include_router(data_quality_router)
 
+
+# Advanced category-level sales analytics
+from backend.category_analytics import router as category_analytics_router
+app.include_router(category_analytics_router)
+
 app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")
