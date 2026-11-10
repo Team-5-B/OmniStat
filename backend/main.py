@@ -175,4 +175,9 @@ app.include_router(uploads_router)
 from backend.sales_intelligence import router as sales_intelligence_router
 app.include_router(sales_intelligence_router)
 
+
+# Siddartha: PostgreSQL sales data quality and reconciliation API
+from backend.data_quality import router as data_quality_router
+app.include_router(data_quality_router)
+
 app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")
