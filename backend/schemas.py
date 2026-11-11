@@ -54,3 +54,42 @@ class MeResponse(BaseModel):
     business_id: str
     business_name: str
     role: str
+
+
+"""Nicholas - Task 4.4: change your own name, email, or password"""
+class AccountUpdate(BaseModel):
+    # Both are optional so the page can send just the field that changed.
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    email: EmailStr | None = None
+
+    @field_validator("name")
+    @classmethod
+    def nonblank_name(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        value = value.strip()
+        if not value:
+            raise ValueError("Cannot be blank")
+        return value
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str | None) -> str | None:
+        return value.lower() if value else value
+
+
+class AccountResponse(BaseModel):
+    name: str
+    email: str
+
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
+
+    @field_validator("new_password")
+    @classmethod
+    def bcrypt_limit(cls, value: str) -> str:
+        if len(value.encode("utf-8")) > 72:
+            raise ValueError("Password must be 72 bytes or fewer")
+        return value

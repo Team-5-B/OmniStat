@@ -1,0 +1,65 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.1, pytest-9.2.0, pluggy-1.7.0 -- /Users/siddarthareddypagilla/Omnistat nov/OmniStat/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/siddarthareddypagilla/Omnistat nov/OmniStat
+plugins: anyio-4.16.0
+collecting ... collected 50 items
+
+tests/test_account.py::test_update_name_only_keeps_email PASSED          [  2%]
+tests/test_account.py::test_update_email_is_lowercased PASSED            [  4%]
+tests/test_account.py::test_update_email_taken_by_someone_else PASSED    [  6%]
+tests/test_account.py::test_update_rejects_empty_body_and_no_token PASSED [  8%]
+tests/test_account.py::test_change_password_success PASSED               [ 10%]
+tests/test_account.py::test_change_password_wrong_current_or_short_new PASSED [ 12%]
+tests/test_auth.py::test_register_creates_all_three_rows_and_bcrypt_hash PASSED [ 14%]
+tests/test_auth.py::test_duplicate_email_rolls_back_new_business PASSED  [ 16%]
+tests/test_auth.py::test_login_correct_and_wrong_password PASSED         [ 18%]
+tests/test_auth.py::test_missing_user_and_bad_input PASSED               [ 20%]
+tests/test_auth.py::test_tampered_token_rejected PASSED                  [ 22%]
+tests/test_me.py::test_me_returns_user_and_business PASSED               [ 24%]
+tests/test_me.py::test_me_rejects_missing_token PASSED                   [ 26%]
+tests/test_me.py::test_me_rejects_fake_token PASSED                      [ 28%]
+tests/test_me.py::test_me_rejects_token_for_deleted_user PASSED          [ 30%]
+tests/test_owner.py::test_owner_allowed PASSED                           [ 32%]
+tests/test_owner.py::test_employee_blocked PASSED                        [ 34%]
+tests/test_owner.py::test_no_membership PASSED                           [ 36%]
+tests/test_owner.py::test_owner_requires_login PASSED                    [ 38%]
+tests/test_sales_intelligence.py::test_sales_metrics_and_category_mix PASSED [ 40%]
+tests/test_sales_intelligence.py::test_equal_length_previous_period_and_no_hardcoded_growth PASSED [ 42%]
+tests/test_sales_intelligence.py::test_empty_period_has_all_zero_days_and_clear_message PASSED [ 44%]
+tests/test_sales_intelligence.py::test_negative_category_not_drawn_as_negative_pie PASSED [ 46%]
+tests/test_sales_intelligence.py::test_slow_movers_include_only_products_present_in_sales PASSED [ 48%]
+tests/test_sales_intelligence.py::test_monthly_trend_and_weekday_average_use_real_sales PASSED [ 50%]
+tests/test_sales_intelligence.py::test_category_period_change_is_real_not_hardcoded PASSED [ 52%]
+tests/test_sales_intelligence.py::test_invalid_reporting_window_rejected PASSED [ 54%]
+tests/test_sales_intelligence.py::test_analytics_http_endpoint_scoped_to_business PASSED [ 56%]
+tests/test_sales_intelligence.py::test_analytics_supports_7_and_90_days PASSED [ 58%]
+tests/test_sales_intelligence.py::test_analytics_invalid_days_rejected PASSED [ 60%]
+tests/test_sales_intelligence.py::test_analytics_requires_login_without_dependency_override PASSED [ 62%]
+tests/test_sales_intelligence.py::test_dashboard_additive_integration_and_assets PASSED [ 64%]
+tests/test_siddartha_sprint2.py::test_dashboard_kpis_and_30_days PASSED  [ 66%]
+tests/test_siddartha_sprint2.py::test_dashboard_empty_state PASSED       [ 68%]
+tests/test_siddartha_sprint2.py::test_dashboard_requires_auth_and_active_membership PASSED [ 70%]
+tests/test_siddartha_sprint2.py::test_only_owner_can_list_team_and_update_business PASSED [ 72%]
+tests/test_siddartha_sprint2.py::test_invite_creation_lookup_and_expiry PASSED [ 74%]
+tests/test_siddartha_sprint2.py::test_employee_removal_is_business_scoped_and_revokes_access PASSED [ 76%]
+tests/test_siddartha_sprint2.py::test_frontend_mount_does_not_publish_project_secrets PASSED [ 78%]
+tests/test_siddartha_sprint2.py::test_expired_invite_is_rejected PASSED  [ 80%]
+tests/test_upload_parser.py::test_omnistat_simple_format PASSED          [ 82%]
+tests/test_upload_parser.py::test_square_format_and_refunds PASSED       [ 84%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,abc,4.50\n] PASSED [ 86%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,1,nan\n] PASSED [ 88%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,1,1.001\n] PASSED [ 90%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-99-04,Tea,Drinks,1,4.50\n] PASSED [ 92%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[Date,Product\n2026-11-04,Tea\n] PASSED [ 94%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n] PASSED [ 96%]
+tests/test_upload_parser.py::test_invalid_csv_rejected[date,product,category,quantity,revenue\n2026-11-04,Tea,Drinks,1,4.50,extra\n] PASSED [ 98%]
+tests/test_upload_parser.py::test_both_example_files PASSED              [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/siddarthareddypagilla/Omnistat nov/OmniStat/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 50 passed, 1 warning in 5.45s =========================

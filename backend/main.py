@@ -9,6 +9,7 @@ from backend.security import create_access_token, hash_password, verify_password
 from fastapi import Depends
 from backend.schemas import MeResponse
 from backend.security import get_current_user_claims
+from backend.schemas import AccountResponse, AccountUpdate, PasswordChange
 
 app = FastAPI(title="OmniStat Authentication API")
 
@@ -17,6 +18,28 @@ app = FastAPI(title="OmniStat Authentication API")
 def health():
     """Simple endpoint to check whether the API server is running."""
     return {"status": "ok"}
+
+
+
+@app.get("/health/database")
+def database_health():
+    """Verify that PostgreSQL is accepting queries."""
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+                cur.fetchone()
+
+        return {
+            "status": "ok",
+            "database": "connected",
+        }
+
+    except psycopg.Error:
+        raise HTTPException(
+            status_code=503,
+            detail="Database temporarily unavailable",
+        )
 
 
 @app.post("/api/auth/register", response_model=AuthResponse, status_code=201)
@@ -115,6 +138,77 @@ def me(claims: dict = Depends(get_current_user_claims)):
         business_name=business_name,
         role=role
     )
+
+"""Nicholas - Task 4.4: update your own name and/or email"""
+@app.patch("/api/account", response_model=AccountResponse)
+def update_account(data: AccountUpdate, claims: dict = Depends(get_current_user_claims)):
+    if data.name is None and data.email is None:
+        raise HTTPException(status_code=422, detail="Send a name, an email, or both")
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                # COALESCE keeps the old value for whichever field wasn't sent.
+                cur.execute(
+                    """UPDATE users
+                       SET name = COALESCE(%s, name), email = COALESCE(%s, email)
+                       WHERE id = %s
+                       RETURNING name, email""",
+                    (data.name, data.email, claims["sub"]),
+                )
+                row = cur.fetchone()
+    except psycopg.errors.UniqueViolation:
+        raise HTTPException(status_code=409, detail="Email already registered")
+
+    if row is None:
+        raise HTTPException(status_code=401, detail="Account no longer exists")
+    return AccountResponse(name=row[0], email=row[1])
+
+"""Nicholas - Task 4.4: change your password (must know the current one)"""
+@app.post("/api/account/password", status_code=204)
+def change_password(data: PasswordChange, claims: dict = Depends(get_current_user_claims)):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT password_hash FROM users WHERE id = %s", (claims["sub"],))
+            row = cur.fetchone()
+            if row is None:
+                raise HTTPException(status_code=401, detail="Account no longer exists")
+
+            # 400, not 401: a wrong current password shouldn't log the user out.
+            if not verify_password(data.current_password, row[0]):
+                raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+            cur.execute(
+                "UPDATE users SET password_hash = %s WHERE id = %s",
+                (hash_password(data.new_password), claims["sub"]),
+            )
+
+
 # Nicholas - serve the frontend pages from the same server as the API, so the forms' fetch("/api/...") 
 # calls reach the backend. MUST stay at the BOTTOM so the /api routes above take priority.
-app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
+# Siddartha Sprint 2 endpoints: registered before the catch-all frontend mount.
+from backend.siddartha_sprint2 import (
+    router as siddartha_sprint2_router, FrontendOnlyStaticFiles
+)
+app.include_router(siddartha_sprint2_router)
+
+from backend.uploads import router as uploads_router
+app.include_router(uploads_router)
+
+from backend.sales_intelligence import router as sales_intelligence_router
+app.include_router(sales_intelligence_router)
+
+
+# Siddartha: PostgreSQL sales data quality and reconciliation API
+from backend.data_quality import router as data_quality_router
+app.include_router(data_quality_router)
+
+
+# Advanced category-level sales analytics
+from backend.category_analytics import router as category_analytics_router
+app.include_router(category_analytics_router)
+
+
+from backend.advanced_drilldown import product_router as advanced_product_router
+app.include_router(advanced_product_router)
+
+app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")
