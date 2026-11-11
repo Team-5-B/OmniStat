@@ -207,4 +207,8 @@ app.include_router(data_quality_router)
 from backend.category_analytics import router as category_analytics_router
 app.include_router(category_analytics_router)
 
+
+from backend.advanced_drilldown import product_router as advanced_product_router
+app.include_router(advanced_product_router)
+
 app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")

@@ -94,7 +94,7 @@
       stops.push(`${colors[index]} ${start.toFixed(2)}% ${end.toFixed(2)}%`);
       const row = append("li",legend);
       const dot = append("span",row,"","si-dot"); dot.style.backgroundColor = colors[index];
-      append("span",row,item.category,"si-name");
+      const categoryLink=append("a",row,item.category,"si-name"); categoryLink.href="category-analytics.html?"+new URLSearchParams({category:item.category,days:el("si-range").value});
       append("span",row,`${(item.revenue / total * 100).toFixed(1)}%`,"si-share");
     });
     chart.style.background = stops.length ? `conic-gradient(${stops.join(", ")})` : "#e9eff8";
@@ -113,7 +113,7 @@
       : b.revenue-a.revenue || b.units_sold-a.units_sold);
     rank.slice(0,10).forEach(product => {
       const row = append("tr",table);
-      append("td",row,product.product);
+      const productCell=append("td",row); const productLink=append("a",productCell,product.product); productLink.href="product-analytics.html?"+new URLSearchParams({category:product.category,product:product.product,days:el("si-range").value});
       append("td",row,product.category,"si-secondary");
       append("td",row,integer.format(product.units_sold));
       append("td",row,usd.format(product.revenue));
@@ -127,7 +127,7 @@
     const table = el("si-category-body"); table.replaceChildren();
     categories.forEach(item => {
       const row = append("tr",table);
-      append("td",row,item.category);
+      const categoryCell=append("td",row); const categoryLink=append("a",categoryCell,item.category); categoryLink.href="category-analytics.html?"+new URLSearchParams({category:item.category,days:el("si-range").value});
       append("td",row,integer.format(item.units_sold));
       append("td",row,usd.format(item.revenue));
       append("td",row,usd.format(item.previous_revenue));
