@@ -1,0 +1,82 @@
+#daily-reconciliation {
+  margin: 24px 0;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #dbe5f1;
+  border-radius: 16px;
+}
+
+#rd-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+#rd-form input,
+#rd-form button,
+#rd-prev,
+#rd-next {
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.rd-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.rd-summary article {
+  padding: 18px;
+  border-radius: 12px;
+  background: #f3f7fd;
+}
+
+.rd-summary span {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.rd-summary strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+
+.rd-table-wrapper { overflow-x: auto; }
+
+.rd-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rd-table th,
+.rd-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e8eef5;
+  text-align: left;
+}
+
+.rd-pager {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 800px) {
+  .rd-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 450px) {
+  .rd-summary {
+    grid-template-columns: 1fr;
+  }
+}

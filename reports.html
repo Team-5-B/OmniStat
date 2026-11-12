@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - OmniStat</title>
     <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="daily-reconciliation.css">
 </head>
 <body class="app-page">
 
@@ -39,9 +40,71 @@
                 <li>Comparisons against previous periods</li>
             </ul>
         </section>
-    </main>
+
+<section id="daily-reconciliation">
+  <h2>Daily Revenue Investigation</h2>
+  <p>Compare stored daily reports with the original sales records.</p>
+
+  <form id="rd-form">
+    <label for="rd-day">Reporting day</label>
+    <input id="rd-day" type="date" required>
+    <button type="submit">Investigate</button>
+  </form>
+
+  <p id="rd-message" role="status">
+    Choose a reporting day.
+  </p>
+
+  <div id="rd-results" hidden>
+    <div class="rd-summary">
+      <article>
+        <span>Stored daily total</span>
+        <strong id="rd-stored">—</strong>
+      </article>
+      <article>
+        <span>Recomputed net revenue</span>
+        <strong id="rd-calculated">—</strong>
+      </article>
+      <article>
+        <span>Signed difference</span>
+        <strong id="rd-difference">—</strong>
+      </article>
+      <article>
+        <span>Status</span>
+        <strong id="rd-status">—</strong>
+      </article>
+    </div>
+
+    <p id="rd-explanation"></p>
+
+    <div class="rd-table-wrapper">
+      <table class="rd-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Net units</th>
+            <th>Net revenue</th>
+            <th>Import batch</th>
+            <th>Source record</th>
+          </tr>
+        </thead>
+        <tbody id="rd-records"></tbody>
+      </table>
+    </div>
+
+    <div class="rd-pager">
+      <button id="rd-prev" type="button">Previous</button>
+      <span id="rd-page"></span>
+      <button id="rd-next" type="button">Next</button>
+    </div>
+  </div>
+</section>
+
+</main>
 
     <script src="nav.js"></script>
     <script src="logout.js"></script>
+<script src="daily-reconciliation.js" defer></script>
 </body>
 </html>

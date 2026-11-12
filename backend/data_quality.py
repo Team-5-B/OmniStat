@@ -219,3 +219,156 @@ def sales_data_quality(
             "no records or dashboard totals were changed."
         ),
     }
+
+# Daily revenue discrepancy drill-down.
+# Signed revenue follows the existing CSV ingestion rules.
+
+DAY_SUMMARY_SQL = """
+SELECT total_revenue, items_sold_count
+FROM daily_sales_aggregates
+WHERE business_id = %s AND business_date = %s
+"""
+
+DAY_TOTAL_SQL = """
+SELECT COUNT(*), COALESCE(SUM(revenue), 0),
+       COALESCE(SUM(quantity), 0)
+FROM sales_line_items
+WHERE business_id = %s AND business_date = %s
+"""
+
+DAY_RECORDS_SQL = """
+SELECT s.id, s.business_date, s.product_name, s.category,
+       s.quantity, s.revenue, s.upload_id,
+       u.original_filename
+FROM sales_line_items s
+LEFT JOIN raw_csv_uploads u
+  ON u.id = s.upload_id AND u.business_id = s.business_id
+WHERE s.business_id = %s AND s.business_date = %s
+ORDER BY s.id
+LIMIT %s OFFSET %s
+"""
+
+
+def summarize_daily_difference(summary, totals):
+    """Reconcile exact signed Decimal amounts before JSON conversion."""
+    count, revenue, units = totals
+
+    count = int(count)
+    calculated = Decimal(revenue)
+    calculated_units = int(units)
+
+    exists = summary is not None
+
+    stored = Decimal(summary[0]) if exists else None
+    stored_units = int(summary[1]) if exists else None
+
+    if not exists:
+        if count:
+            status = "missing_summary"
+            reason = "Sales records exist without a daily summary."
+        else:
+            status = "no_data"
+            reason = "No sales records or daily summary exist."
+    elif stored == calculated and stored_units == calculated_units:
+        status = "matching"
+        reason = "Stored totals agree with the source records."
+    elif count == 0:
+        status = "mismatch"
+        reason = "A daily summary exists without source records."
+    elif stored == calculated:
+        status = "mismatch"
+        reason = "Revenue matches, but net units differ."
+    else:
+        status = "mismatch"
+        reason = (
+            "Stored and recomputed totals disagree. "
+            "Review the source records to determine why."
+        )
+
+    return {
+        "status": status,
+        "explanation": reason,
+        "stored": {
+            "net_revenue": _amount(stored) if exists else None,
+            "net_units": stored_units,
+        },
+        "recomputed": {
+            "net_revenue": _amount(calculated),
+            "net_units": calculated_units,
+            "record_count": count,
+        },
+        "difference": {
+            "net_revenue": (
+                _amount(calculated - stored) if exists else None
+            ),
+            "net_units": (
+                calculated_units - stored_units if exists else None
+            ),
+        },
+    }
+
+
+@router.get("/api/business/data-quality/day")
+def daily_sales_discrepancy(
+    day: date = Query(...),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(25, ge=1, le=100),
+    owner: dict = Depends(current_owner),
+):
+    """Read-only, owner-authorized daily revenue investigation."""
+
+    business_id = owner["business_id"]
+    offset = (page - 1) * page_size
+
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SET TRANSACTION ISOLATION LEVEL "
+                "REPEATABLE READ READ ONLY"
+            )
+
+            cursor.execute(
+                DAY_SUMMARY_SQL, (business_id, day)
+            )
+            summary = cursor.fetchone()
+
+            cursor.execute(
+                DAY_TOTAL_SQL, (business_id, day)
+            )
+            totals = cursor.fetchone()
+
+            cursor.execute(
+                DAY_RECORDS_SQL,
+                (business_id, day, page_size, offset),
+            )
+            rows = cursor.fetchall()
+
+    result = summarize_daily_difference(summary, totals)
+    count = result["recomputed"]["record_count"]
+
+    result.update({
+        "day": day.isoformat(),
+        "records": [
+            {
+                "id": str(row[0]),
+                "business_date": row[1].isoformat(),
+                "product": row[2],
+                "category": row[3],
+                "quantity": int(row[4]),
+                "net_revenue": _amount(row[5]),
+                "upload_id": str(row[6]) if row[6] else None,
+                "upload_filename": row[7],
+            }
+            for row in rows
+        ],
+        "pagination": {
+            "page": page,
+            "page_size": page_size,
+            "total_records": count,
+            "total_pages": (count + page_size - 1) // page_size,
+            "has_next": offset + len(rows) < count,
+            "has_previous": page > 1,
+        },
+    })
+
+    return result
