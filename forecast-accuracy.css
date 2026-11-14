@@ -1,0 +1,19 @@
+/* DemandPulse — additive visual treatment; inherits ForecastStudio theme. */
+.accuracy-panel{margin-bottom:18px;min-width:0;background:linear-gradient(125deg,#11213d,#151d3a);border-color:#3a4a75}
+.accuracy-panel .accuracy-top{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.accuracy-panel .accuracy-top select{background:#152a47;border:1px solid #4a638d;color:#eef7ff;padding:10px 13px;border-radius:10px;font:inherit}
+.accuracy-panel .accuracy-intro{font-size:12px;line-height:1.6;color:#a5bbd8;margin:6px 0 17px}
+.accuracy-panel .accuracy-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}
+.accuracy-panel .accuracy-stats>div{border:1px solid #34466b;background:#111e35;border-radius:12px;padding:18px}
+.accuracy-panel .accuracy-stats span{color:#9aafd0;font-size:11px;display:block}
+.accuracy-panel .accuracy-stats strong{font-size:clamp(18px,2vw,28px);font-variant-numeric:tabular-nums;display:block;margin:10px 0 0;overflow-wrap:anywhere}
+.accuracy-panel .accuracy-period{color:#acbfe0;font-size:12px;margin:12px 0}
+.accuracy-panel .accuracy-daily{min-height:175px;background:#0f1b32;border:1px solid #304361;border-radius:12px;padding:10px}
+.accuracy-panel .accuracy-daily svg{display:block;width:100%;height:auto}
+.accuracy-panel .accuracy-legend{display:flex;flex-wrap:wrap;gap:18px;font-size:11px;color:#c2d7ec;margin:12px 0}
+.accuracy-panel .accuracy-key{display:inline-block;width:17px;height:3px;vertical-align:middle;margin-right:8px}
+.accuracy-panel .accuracy-key.expected{background:#69edda}.accuracy-panel .accuracy-key.actual{background:#a7a2ff}
+.accuracy-panel .accuracy-alerts{margin:14px 0 0;padding-left:22px;color:#d0def3;font-size:12px;line-height:1.8}
+.accuracy-panel .accuracy-alert.warning{color:#ffd1a3}.accuracy-panel .accuracy-alert.review{color:#f7dcac}
+@media(max-width:850px){.accuracy-panel .accuracy-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:475px){.accuracy-panel .accuracy-stats{grid-template-columns:1fr}}
