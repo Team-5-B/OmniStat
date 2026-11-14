@@ -202,7 +202,22 @@
     </div>
 </section>
 
-    </main>
+
+    <section id="daily-reconciliation-launch">
+      <h2>Investigate Daily Revenue</h2>
+      <p>Open a detailed, read-only review of one reporting day.</p>
+      <form action="reports.html" method="get">
+        <label for="reconciliation-day">Reporting day</label>
+        <input id="reconciliation-day"
+               name="day"
+               type="date"
+               value="2026-11-12"
+               required>
+        <button type="submit">Investigate</button>
+      </form>
+    </section>
+
+</main>
     <script>
     const token = localStorage.getItem("token");
 
@@ -229,7 +244,7 @@
         });
     }
 </script>
-        
+
 <script>
     const csvFile = document.getElementById("csvFile");
     const fileMessage = document.getElementById("fileMessage");
