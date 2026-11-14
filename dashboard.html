@@ -6,6 +6,7 @@
     <title>OmniStat Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="sales-intelligence.css">
+<link rel="stylesheet" href="forecast-preview.css">
 </head>
 <body class="app-page si-page">
     <nav class="top-nav">
@@ -217,6 +218,23 @@
       </form>
     </section>
 
+<!-- ForecastStudio: owner-only planning preview; not an automated purchase system. -->
+<section id="forecast-preview" aria-labelledby="forecast-preview-title">
+  <div class="fp-header">
+    <div>
+      <p class="fp-kicker">DEMAND INTELLIGENCE</p>
+      <h2 id="forecast-preview-title">ForecastStudio — plan ahead</h2>
+      <p class="fp-description">Net product-unit forecasts for the next week, month, quarter and year, with uncertainty, historical replay evidence, alerts and human-reviewed stock scenarios.</p>
+    </div>
+    <a class="fp-open" href="forecast-studio.html">Explore forecasts <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="fp-metrics">
+    <div class="fp-metric"><span>NEXT 7-DAY NET UNITS</span><strong id="forecast-preview-units">Loading…</strong></div>
+    <div class="fp-metric"><span>HEURISTIC PLANNING RANGE</span><strong id="forecast-preview-range">—</strong></div>
+  </div>
+  <p id="forecast-preview-status" role="status" aria-live="polite">Checking data readiness…</p>
+</section>
+
 </main>
     <script>
     const token = localStorage.getItem("token");
@@ -311,5 +329,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <script src="dashboard.js"></script>
     <script src="sales-intelligence.js"></script>
+<script src="forecast-preview.js" defer></script>
 </body>
 </html>

@@ -211,4 +211,8 @@ app.include_router(category_analytics_router)
 from backend.advanced_drilldown import product_router as advanced_product_router
 app.include_router(advanced_product_router)
 
+# ForecastStudio: business-owner demand and accuracy APIs
+from backend.demand_forecasting import router as forecast_router
+app.include_router(forecast_router)
+
 app.mount("/", FrontendOnlyStaticFiles(directory=".", html=True), name="frontend")

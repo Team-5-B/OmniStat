@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ForecastStudio | OmniStat</title>
+  <meta name="description" content="Explainable, business-scoped sales forecasts and planning scenarios.">
+  <link rel="stylesheet" href="forecast-studio.css">
+  <link rel="stylesheet" href="forecast-accuracy.css">
+  <script src="forecast-studio.js" defer></script>
+  <script src="forecast-accuracy.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="layout">
+    <aside class="side-rail" aria-label="Application navigation">
+      <a class="logo" href="dashboard.html"><span class="logo-mark">O</span><span>OMNISTAT</span></a>
+      <div class="rail-label">WORKSPACES</div>
+      <a class="rail-item" href="dashboard.html"><span aria-hidden="true">▦</span> Overview</a>
+      <a class="rail-item" href="reports.html"><span aria-hidden="true">▤</span> Reports</a>
+      <a class="rail-item active" href="forecast-studio.html" aria-current="page"><span aria-hidden="true">⌁</span> ForecastStudio</a>
+      <a class="rail-item" href="inventory.html"><span aria-hidden="true">⬡</span> Inventory</a>
+      <div class="rail-foot">DEMAND INTELLIGENCE <span>v1 · research preview</span></div>
+    </aside>
+    <main class="workspace" id="forecast-app">
+      <header class="topline">
+        <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> OMNISTAT / DEMAND INTELLIGENCE</div>
+        <a class="back-link" href="dashboard.html">Return to overview ↗</a>
+      </header>
+      <section class="hero">
+        <div>
+          <p class="kicker">FORECAST STUDIO <span class="pill">EXPLAINABLE BASELINE</span></p>
+          <h1>See what tomorrow <em>might</em> demand.</h1>
+          <p class="hero-copy">Forecast product-unit demand and net sales from approved CSV history. Explore future weeks, months, quarters, and years — with backtest evidence and honest data-quality warnings.</p>
+        </div>
+        <div class="hero-decoration" aria-hidden="true"><span class="orb orb-one"></span><span class="orb orb-two"></span><span class="grid-lines"></span></div>
+      </section>
+      <div class="control-panel">
+        <div class="segmented" role="group" aria-label="Forecast horizon">
+          <button type="button" class="horizon is-active" data-horizon="week" aria-pressed="true">7 DAYS</button>
+          <button type="button" class="horizon" data-horizon="month" aria-pressed="false">30 DAYS</button>
+          <button type="button" class="horizon" data-horizon="quarter" aria-pressed="false">QUARTER</button>
+          <button type="button" class="horizon" data-horizon="year" aria-pressed="false">YEAR</button>
+        </div>
+        <div class="filters">
+          <label>Category<select id="forecast-category"><option value="">All categories</option></select></label>
+          <label>Product<select id="forecast-product"><option value="">All products</option></select></label>
+        </div>
+      </div>
+      <p class="status" id="forecast-status" role="status" aria-live="polite">Loading authorized business data…</p>
+      <div id="forecast-ready" hidden>
+        <section class="metrics" aria-label="Forecast metrics">
+          <article class="metric"><div class="metric-top">EXPECTED NET UNITS <span>↗</span></div><strong id="kpi-units">—</strong><small>Future net item demand proxy</small></article>
+          <article class="metric"><div class="metric-top">EXPECTED NET SALES <span>↗</span></div><strong id="kpi-revenue">—</strong><small>Signed-sales baseline, not profit</small></article>
+          <article class="metric"><div class="metric-top">PLANNING RANGE <span>⌁</span></div><strong id="kpi-range">—</strong><small>Heuristic unit bounds, not 95% confidence</small></article>
+          <article class="metric"><div class="metric-top">HISTORICAL WAPE <span>◎</span></div><strong id="kpi-error">—</strong><small>Time-ordered holdout error</small></article>
+        </section>
+        <section class="content-grid">
+          <article class="surface chart-surface">
+            <div class="section-head"><div><p class="overline">FUTURE OUTLOOK</p><h2>Demand trajectory</h2></div><span id="chart-model" class="model-chip">Baseline</span></div>
+            <div id="forecast-chart" class="chart-view" role="img" aria-label="Projected daily net unit demand graph"></div>
+            <div class="small-note">Daily forecast is aggregated from historical net quantities; missing source days are assumed zero.</div>
+          </article>
+          <article class="surface alerts-surface"><div class="section-head"><div><p class="overline">OPERATOR BRIEF</p><h2>Signals &amp; alerts</h2></div><span class="signal-icon">!</span></div><div id="forecast-alerts" class="alert-stack"></div></article>
+        </section>
+        <section class="content-grid lower-grid">
+          <article class="surface"><div class="section-head"><div><p class="overline">PRODUCT INTELLIGENCE</p><h2>Projected product demand</h2></div><span class="small-note">Top 30 recent products</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Product / Category</th><th>Projected net units</th><th>Planning upper bound</th><th>Projected net sales</th></tr></thead><tbody id="forecast-products"></tbody></table></div>
+          </article>
+          <article class="surface planner"><div class="section-head"><div><p class="overline">WHAT-IF PLANNER</p><h2>Reorder scenario</h2></div><span class="pill">NO STOCK WRITES</span></div>
+            <p class="small-note">Choose a specific product and enter current on-hand product units. Ingredient ordering requires recipes and inventory mapping, not yet available.</p>
+            <form id="reorder-form" class="scenario-form">
+              <label>On-hand product units<input id="reorder-stock" type="number" min="0" step="1" value="0" required></label>
+              <label>Supplier lead time (days)<input id="reorder-lead" type="number" min="0" max="90" value="5" required></label>
+              <label>Safety days<input id="reorder-safety" type="number" min="0" max="30" value="2" required></label>
+              <label>Product units per pack<input id="reorder-pack" type="number" min="1" max="100000" step="1" value="1" required></label>
+              <button id="reorder-submit" type="submit">Calculate tentative reorder <span>↗</span></button>
+            </form>
+            <div id="reorder-result" class="reorder-result" aria-live="polite">Select a product and enter stock inputs to calculate a scenario. No purchase is placed.</div>
+          </article>
+        </section>
+        <section id="accuracy-panel" class="surface accuracy-panel" aria-labelledby="accuracy-heading">
+          <div class="accuracy-top">
+            <div><p class="overline">DEMANDPULSE / FORECAST RELIABILITY</p><h2 id="accuracy-heading">Predictions versus reality</h2></div>
+            <label>Historical replay period
+              <select id="accuracy-window" aria-label="Completed reporting days to evaluate">
+                <option value="7">Last 7 completed days</option>
+                <option value="30">Last 30 completed days</option>
+              </select>
+            </label>
+          </div>
+          <p class="accuracy-intro">Reconstruct what the model would have predicted at the start of the period, using only earlier sales; then compare it with signed net units actually recorded. No previous forecasts are implied to have been stored.</p>
+          <p id="accuracy-status" class="status" role="status" aria-live="polite">Preparing historical comparison…</p>
+          <div class="accuracy-results" hidden>
+            <div class="accuracy-stats">
+              <div><span>BASELINE NET UNITS</span><strong id="accuracy-predicted">—</strong></div>
+              <div><span>OBSERVED NET UNITS</span><strong id="accuracy-observed">—</strong></div>
+              <div><span>ACTUAL MINUS BASELINE</span><strong id="accuracy-difference">—</strong></div>
+              <div><span>HOLDOUT UNIT WAPE</span><strong id="accuracy-error">—</strong></div>
+            </div>
+            <p id="accuracy-period" class="accuracy-period"></p>
+            <div id="accuracy-daily" class="accuracy-daily" aria-label="Net unit comparison chart"></div>
+            <div class="accuracy-legend"><span><i class="accuracy-key expected"></i>Historical baseline</span><span><i class="accuracy-key actual"></i>Observed signed units</span></div>
+            <p id="accuracy-revenue" class="small-note"></p>
+            <ul id="accuracy-alerts" class="accuracy-alerts"></ul>
+            <p class="small-note">Missing sales dates may be incomplete uploads rather than zero demand. Alert thresholds are heuristics, not stockout predictions.</p>
+          </div>
+        </section>
+        <section class="surface evidence"><div class="section-head"><div><p class="overline">MODEL TRANSPARENCY</p><h2>Evidence, assumptions &amp; timeline</h2></div><span class="pill">READ ONLY</span></div>
+          <div class="evidence-grid"><div><span>Model version</span><strong id="evidence-version">—</strong></div><div><span>Historical span</span><strong id="evidence-span">—</strong></div><div><span>Active sales days</span><strong id="evidence-active">—</strong></div><div><span>Last CSV processed</span><strong id="evidence-upload">—</strong></div></div>
+          <h3>Future calendar breakdown</h3><div class="table-wrap"><table><thead><tr><th>Period</th><th>Net units</th><th>Net revenue</th></tr></thead><tbody id="forecast-buckets"></tbody></table></div>
+          <ul id="forecast-warnings" class="warning-list"></ul>
+        </section>
+      </div>
+      <footer>FORECASTSTUDIO V1 · Advisory only. No automatic purchasing, staffing or inventory movements. Annual and quarterly horizons require substantially more sales history.</footer>
+    </main>
+  </div>
+</body>
+</html>
